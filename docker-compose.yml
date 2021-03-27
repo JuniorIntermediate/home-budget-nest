@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+    db:
+     image: 'postgres:13-alpine'
+     container_name: 'db'
+     restart: always
+     environment:
+        POSTGRES_DB: db
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+     volumes:
+        - postgres_data:/var/lib/postgresql/data
+     ports:
+        - '5432:5432'
+     networks:
+       - home_budget_network
+
+volumes:
+  postgres_data:
+networks:
+  home_budget_network:
+   driver: bridge
