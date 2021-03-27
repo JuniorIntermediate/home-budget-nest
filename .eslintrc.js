@@ -23,6 +23,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/quotes': ['warn', 'single'],
-    'max-len': ['error', { 'code': 100, 'tabWidth': 2 }],
+    'max-len': ['error', { 'code': 140, 'tabWidth': 2 }],
   },
 };
