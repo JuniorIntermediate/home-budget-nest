@@ -1,17 +1,19 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { UserRepository } from './repositories/user.repository';
 
-@Module({
-  providers: [PrismaService, UserRepository],
-  exports: [PrismaService, UserRepository],
-})
+const repositories = [
+  UserRepository,
+];
+
+@Global()
+@Module({})
 export class CoreModule {
   static register(): DynamicModule {
     return {
       module: CoreModule,
-      providers: [PrismaService, UserRepository],
-      exports: [PrismaService, UserRepository],
+      providers: [PrismaService, ...repositories],
+      exports: [PrismaService, ...repositories],
     };
   }
 }

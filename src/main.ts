@@ -4,11 +4,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { cors: true });
+  app.setGlobalPrefix('api');
   const config = new DocumentBuilder()
     .setTitle('Home budget API')
     .setDescription('The documentation for home budget API')
     .setVersion('1.0')
-    .addTag('HomeBudgetAPI')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);

@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto } from '../dto/login.dto';
 import { UserRepository } from '../../core/repositories/user.repository';
@@ -7,18 +7,17 @@ import { User } from '@prisma/client';
 import { JwtPayload } from '../dto/jwt.payload';
 import * as bcrypt from 'bcrypt';
 import { TokenResponse } from '../dto/token.response';
+import { PasswordInterface } from '../interface/password.interface';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly jwtService: JwtService, private readonly userRepository: UserRepository) {}
+  constructor(private readonly jwtService: JwtService, private readonly userRepository: UserRepository) {
+  }
 
   async login(loginDto: LoginDto): Promise<TokenResponse> {
-    console.log(loginDto);
     const user = await this.userRepository.findUserByEmail({ email: loginDto.email });
     if (user) {
-      console.log(user);
       const isValidPassword = await this.validatePassword(loginDto.password, user);
-      console.log(isValidPassword);
       if (isValidPassword) {
         return this.createToken(user);
       }
@@ -29,7 +28,7 @@ export class AuthService {
   async register({ email, firstName, lastName, password }: RegisterDto): Promise<void> {
     const user = await this.userRepository.findUserByEmail({ email: email });
     if (user) {
-      throw new HttpException('User already exist!', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('User already exist!');
     }
     const { passwordHash, passwordSalt } = await this.hashPassword(password);
     await this.userRepository.createUser({ email, firstName, lastName, passwordHash, passwordSalt });
@@ -53,7 +52,7 @@ export class AuthService {
     };
   }
 
-  private hashPassword = async (password: string): Promise<{ passwordHash: string; passwordSalt: string }> => {
+  private hashPassword = async (password: string): Promise<PasswordInterface> => {
     const passwordSalt = await bcrypt.genSalt(5);
     const passwordHash = await bcrypt.hash(password, passwordSalt);
     return { passwordHash, passwordSalt };
