@@ -32,7 +32,7 @@ export class AuthService {
       throw new HttpException('User already exist!', HttpStatus.BAD_REQUEST);
     }
     const { passwordHash, passwordSalt } = await this.hashPassword(password);
-    this.userRepository.createUser({ email, firstName, lastName, passwordHash, passwordSalt });
+    await this.userRepository.createUser({ email, firstName, lastName, passwordHash, passwordSalt });
   }
 
   async findByPayload(jwtPayload: JwtPayload): Promise<User> {

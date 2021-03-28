@@ -5,5 +5,4 @@ import { CoreModule } from './core/core.module';
 @Module({
   imports: [CoreModule.register(), AuthModule],
 })
-export class AppModule {
-}
+export class AppModule {}
