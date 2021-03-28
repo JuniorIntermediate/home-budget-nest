@@ -14,3 +14,5 @@ export type CategoryUpdateParams = {
   where: Prisma.CategoryWhereUniqueInput,
   data: Prisma.CategoryUpdateInput
 }
+
+export type SubCategoryUpdateParams = Prisma.SubCategoryUpdateManyWithoutCategoryInput

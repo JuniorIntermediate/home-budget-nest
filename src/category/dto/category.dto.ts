@@ -1,4 +1,6 @@
 import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
+import { GetCategoryWithSubCategories } from 'src/core/schema-types/category-with-sub-categories.type';
+import { SubCategoryDto } from './sub-category.dto';
 
 export class CategoryDto {
   @ApiProperty()
@@ -13,14 +15,18 @@ export class CategoryDto {
   @ApiProperty({ readOnly: true })
   userId?: number;
 
-  @ApiProperty()
-  parentCategoryId?: number;
+  @ApiProperty({ type: [SubCategoryDto] })
+  subCategories?: SubCategoryDto[];
 
-  constructor(input?: Partial<CategoryDto>) {
+  constructor(input?: Partial<GetCategoryWithSubCategories>) {
     this.id = input.id;
     this.name = input.name;
     this.icon = input.icon;
-    this.parentCategoryId = input.parentCategoryId;
+    this.subCategories = input.subCategories.map(subCategory => ({
+      id: subCategory.id,
+      icon: subCategory.icon,
+      name: subCategory.name,
+    }));
     this.userId = input.userId;
   }
 }
