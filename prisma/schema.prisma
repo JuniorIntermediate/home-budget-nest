@@ -11,11 +11,12 @@ generator client {
 }
 
 model Budget {
-  id               Int                @id @default(autoincrement())
-  value            Decimal            @db.Money
-  currentValue     Decimal            @db.Money
-  name             String             @db.VarChar(255)
-  user             User               @relation(fields: [userId], references: [id])
+  id               Int               @id @default(autoincrement())
+  value            Decimal           @db.Money
+  currentValue     Decimal           @db.Money
+  name             String            @db.VarChar(255)
+  isDeleted         Boolean          @default(false)
+  user             User              @relation(fields: [userId], references: [id])
   userId           Int
   expense          Expense?
   recurringExpense RecurringExpense?
@@ -25,83 +26,90 @@ model IncomeCategory {
   id     Int    @id @default(autoincrement())
   name   String @unique @db.VarChar(255)
   icon   String @db.VarChar(100)
+  isDeleted         Boolean           @default(false)
   user   User   @relation(fields: [userId], references: [id])
   userId Int
 }
 
 model OutcomeCategory {
-  id               Int                @id @default(autoincrement())
-  name             String             @unique @db.VarChar(255)
-  icon             String             @db.VarChar(100)
-  user             User               @relation(fields: [userId], references: [id])
+  id               Int               @id @default(autoincrement())
+  name             String            @unique @db.VarChar(255)
+  icon             String            @db.VarChar(100)
+  isDeleted         Boolean          @default(false)
+  user             User              @relation(fields: [userId], references: [id])
   userId           Int
-  subCategory      SubCategory?
   expense          Expense?
   recurringExpense RecurringExpense?
 }
 
-model SubCategory {
-  id                Int                @id @default(autoincrement())
-  name              String             @unique @db.VarChar(255)
-  icon              String             @db.VarChar(100)
-  user              User               @relation(fields: [userId], references: [id])
+model Category {
+  id                Int               @id @default(autoincrement())
+  name              String            @unique @db.VarChar(255)
+  icon              String            @db.VarChar(100)
+  isDeleted         Boolean           @default(false)
+  user              User              @relation(fields: [userId], references: [id])
   userId            Int
-  outcomeCategory   OutcomeCategory   @relation(fields: [outcomeCategoryId], references: [id])
-  outcomeCategoryId Int
+  parentCategory    Category?         @relation(fields: [parentCategoryId], references: [id])
+  parentCategoryId  Int?
   expense           Expense?
   recurringExpense  RecurringExpense?
+  category          Category[]        @relation("CategoryToCategory")
 }
 
 model Currency {
-  id               Int                @id @default(autoincrement())
-  code             String             @unique @db.VarChar(3)
-  exchangeRate     Float              @db.DoublePrecision
-  user             User               @relation(fields: [userId], references: [id])
+  id               Int               @id @default(autoincrement())
+  code             String            @unique @db.VarChar(3)
+  exchangeRate     Float             @db.DoublePrecision
+  isDeleted        Boolean           @default(false)
+  user             User              @relation(fields: [userId], references: [id])
   userId           Int
   expense          Expense?
   recurringExpense RecurringExpense?
 }
 
 model Expense {
-  id                Int              @id @default(autoincrement())
-  date              DateTime         @db.Date
-  note              String           @db.VarChar(255)
-  amount            Decimal          @db.Money
-  payer             Payer            @relation(fields: [payerId], references: [id])
+  id                Int             @id @default(autoincrement())
+  date              DateTime        @db.Date
+  note              String          @db.VarChar(255)
+  amount            Decimal         @db.Money
+  isDeleted         Boolean           @default(false)
+  payer             Payer           @relation(fields: [payerId], references: [id])
   payerId           Int
   currency          Currency        @relation(fields: [currencyId], references: [id])
   currencyId        Int
   payFrom           Budget          @relation(fields: [budgetId], references: [id])
   budgetId          Int
-  subCategory       SubCategory     @relation(fields: [subCategoryId], references: [id])
-  subCategoryId     Int
+  category          Category        @relation(fields: [categoryId], references: [id])
+  categoryId        Int
   outcomeCategory   OutcomeCategory @relation(fields: [outcomeCategoryId], references: [id])
   outcomeCategoryId Int
 }
 
 model RecurringExpense {
-  id                Int              @id @default(autoincrement())
-  date              DateTime         @db.Date
-  note              String           @db.VarChar(255)
-  amount            Decimal          @db.Money
-  dayOfPayment      DateTime         @db.Date
-  activationDate    DateTime         @db.Date
-  payer             Payer            @relation(fields: [payerId], references: [id])
+  id                Int             @id @default(autoincrement())
+  date              DateTime        @db.Date
+  note              String          @db.VarChar(255)
+  amount            Decimal         @db.Money
+  dayOfPayment      DateTime        @db.Date
+  activationDate    DateTime        @db.Date
+  isDeleted         Boolean         @default(false)
+  payer             Payer           @relation(fields: [payerId], references: [id])
   payerId           Int
-  currency          Currency         @relation(fields: [currencyId], references: [id])
+  currency          Currency        @relation(fields: [currencyId], references: [id])
   currencyId        Int
-  payFrom           Budget           @relation(fields: [budgetId], references: [id])
+  payFrom           Budget          @relation(fields: [budgetId], references: [id])
   budgetId          Int
-  subCategory       SubCategory      @relation(fields: [subCategoryId], references: [id])
-  subCategoryId     Int
-  outcomeCategory   OutcomeCategory  @relation(fields: [outcomeCategoryId], references: [id])
+  category          Category        @relation(fields: [categoryId], references: [id])
+  categoryId        Int
+  outcomeCategory   OutcomeCategory @relation(fields: [outcomeCategoryId], references: [id])
   outcomeCategoryId Int
 }
 
 model Payer {
-  id               Int                @id @default(autoincrement())
-  name             String             @unique @db.VarChar(255)
-  user             User               @relation(fields: [userId], references: [id])
+  id               Int               @id @default(autoincrement())
+  name             String            @unique @db.VarChar(255)
+  isDeleted        Boolean           @default(false)
+  user             User              @relation(fields: [userId], references: [id])
   userId           Int
   expense          Expense?
   recurringExpense RecurringExpense?
@@ -119,6 +127,6 @@ model User {
   payers            Payer[]
   outcomeCategories OutcomeCategory[]
   incomeCategories  IncomeCategory[]
-  subCategories     SubCategory[]
+  subCategories     Category[]
   currency          Currency?
 }

@@ -12,6 +12,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { RequestUserModel } from '../../core/models/request-user.model';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -46,7 +47,7 @@ export class AuthController {
     description: 'The logged user information stored in JWT', type: JwtPayload,
   })
   @ApiUnauthorizedResponse({ description: 'User are not logged in' })
-  public getProfile(@Request() req: Request & { user: JwtPayload }): JwtPayload {
+  public getProfile(@Request() req: RequestUserModel): JwtPayload {
     return req.user;
   }
 }
