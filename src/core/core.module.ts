@@ -1,9 +1,11 @@
 import { DynamicModule, Global, Module } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { UserRepository } from './repositories/user.repository';
+import { CategoryRepository } from './repositories/category.repository';
 
 const repositories = [
   UserRepository,
+  CategoryRepository
 ];
 
 @Global()
