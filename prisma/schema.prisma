@@ -49,11 +49,18 @@ model Category {
   isDeleted         Boolean           @default(false)
   user              User              @relation(fields: [userId], references: [id])
   userId            Int
-  parentCategory    Category?         @relation(fields: [parentCategoryId], references: [id])
-  parentCategoryId  Int?
   expense           Expense?
   recurringExpense  RecurringExpense?
-  category          Category[]        @relation("CategoryToCategory")
+  subCategories     SubCategory[]
+}
+
+model SubCategory {
+  id                Int               @id @default(autoincrement())
+  name              String            @unique @db.VarChar(255)
+  icon              String            @db.VarChar(100)
+  isDeleted         Boolean           @default(false)
+  category          Category          @relation(fields: [categoryId], references: [id])
+  categoryId        Int
 }
 
 model Currency {
@@ -127,6 +134,6 @@ model User {
   payers            Payer[]
   outcomeCategories OutcomeCategory[]
   incomeCategories  IncomeCategory[]
-  subCategories     Category[]
+  categories        Category[]
   currency          Currency?
 }

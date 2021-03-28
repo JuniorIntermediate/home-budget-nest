@@ -16,6 +16,7 @@ import {
   IncomeCategoryGetParams,
   OutcomeCategoryGetParams,
 } from '../schema-types/category.get-params';
+import { GetCategoryWithSubCategories } from '../schema-types/category-with-sub-categories.type';
 
 @Injectable()
 export class CategoryRepository {
@@ -49,7 +50,7 @@ export class CategoryRepository {
     });
   }
 
-  async findIncomeCategoryByName(where: Prisma.IncomeCategoryWhereUniqueInput): Promise<IncomeCategory | null> {
+  async findIncomeCategoryByUniqueField(where: Prisma.IncomeCategoryWhereUniqueInput): Promise<IncomeCategory | null> {
     return this.prisma.incomeCategory.findUnique({
       where,
     });
@@ -68,7 +69,7 @@ export class CategoryRepository {
     return this.prisma.outcomeCategory.findMany(params);
   }
 
-  async findOutcomeCategoryByName(where: Prisma.OutcomeCategoryWhereUniqueInput): Promise<OutcomeCategory | null> {
+  async findOutcomeCategoryByUniqueField(where: Prisma.OutcomeCategoryWhereUniqueInput): Promise<OutcomeCategory | null> {
     return this.prisma.outcomeCategory.findUnique({
       where,
     });
@@ -94,13 +95,20 @@ export class CategoryRepository {
     return this.prisma.category.update({ where, data });
   }
 
-  async getCategories(params: CategoryGetParams): Promise<Category[]> {
-    return this.prisma.category.findMany(params);
+  async getCategories(params: CategoryGetParams): Promise<GetCategoryWithSubCategories[]> {
+    return this.prisma.category.findMany({
+      ...params, include: {
+        subCategories: true,
+      },
+    });
   }
 
-  async findCategoryByName(where: Prisma.CategoryWhereUniqueInput): Promise<Category | null> {
-    return this.prisma.category.findUnique({
+  async findCategoryByUniqueField(where: Prisma.CategoryWhereUniqueInput): Promise<GetCategoryWithSubCategories | null> {
+    return this.prisma.category.findFirst({
       where,
+      include: {
+        subCategories: true,
+      },
     });
   }
 
