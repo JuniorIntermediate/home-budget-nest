@@ -110,10 +110,11 @@ model Payer {
 model User {
   id                Int               @id @default(autoincrement())
   email             String            @unique
-  passwordHash      Bytes
+  passwordHash      String
+  passwordSalt      String
   firstName         String            @db.VarChar(100)
   lastName          String            @db.VarChar(100)
-  isActive          Boolean           @default(false)
+  isActive          Boolean           @default(true)
   budgets           Budget[]
   payers            Payer[]
   outcomeCategories OutcomeCategory[]
