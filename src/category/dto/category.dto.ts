@@ -1,6 +1,6 @@
 import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 
-export class OutcomeCategoryDto {
+export class CategoryDto {
   @ApiProperty()
   id: number;
 
@@ -13,18 +13,22 @@ export class OutcomeCategoryDto {
   @ApiProperty({ readOnly: true })
   userId?: number;
 
-  constructor(input?: Partial<OutcomeCategoryDto>) {
+  @ApiProperty()
+  parentCategoryId?: number;
+
+  constructor(input?: Partial<CategoryDto>) {
     this.id = input.id;
     this.name = input.name;
     this.icon = input.icon;
+    this.parentCategoryId = input.parentCategoryId;
     this.userId = input.userId;
   }
 }
 
-export class CreateOutcomeCategoryDto extends OmitType(OutcomeCategoryDto, ['id'] as const) {
+export class CreateCategoryDto extends OmitType(CategoryDto, ['id'] as const) {
   @ApiHideProperty()
   email: string;
 }
 
-export class UpdateOutcomeCategoryDto extends IntersectionType(OutcomeCategoryDto, CreateOutcomeCategoryDto) {
+export class UpdateCategoryDto extends IntersectionType(CategoryDto, CreateCategoryDto) {
 }

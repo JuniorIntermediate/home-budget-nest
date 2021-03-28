@@ -12,7 +12,6 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { JwtPayload } from '../../auth/dto/jwt.payload';
 import { JwtGuard } from '../../auth/guard/jwt.guard';
 import { CategoryService } from '../services/category.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -47,7 +46,7 @@ export class OutcomeCategoryController {
   @Put()
   @ApiOkResponse({ description: 'The outcome category has been successfully updated.' })
   async updateOutcomeCategory(
-    @Req() req: Request & { user: JwtPayload },
+    @Req() req: RequestUserModel,
     @Body() outcomeCategoryDto: UpdateOutcomeCategoryDto): Promise<void> {
     await this.categoryService.updateOutcomeCategory({ ...outcomeCategoryDto, email: req.user.email });
   }

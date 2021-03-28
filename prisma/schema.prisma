@@ -38,7 +38,6 @@ model OutcomeCategory {
   isDeleted         Boolean          @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
-  category         Category?
   expense          Expense?
   recurringExpense RecurringExpense?
 }
@@ -52,8 +51,6 @@ model Category {
   userId            Int
   parentCategory    Category?         @relation(fields: [parentCategoryId], references: [id])
   parentCategoryId  Int?
-  outcomeCategory   OutcomeCategory   @relation(fields: [outcomeCategoryId], references: [id])
-  outcomeCategoryId Int
   expense           Expense?
   recurringExpense  RecurringExpense?
   category          Category[]        @relation("CategoryToCategory")
