@@ -129,11 +129,18 @@ model User {
   passwordSalt      String
   firstName         String            @db.VarChar(100)
   lastName          String            @db.VarChar(100)
-  isActive          Boolean           @default(true)
+  verificationToken String?
+  activationStatus  ActivationStatus  @default(PENDING)
   budgets           Budget[]
   payers            Payer[]
   outcomeCategories OutcomeCategory[]
   incomeCategories  IncomeCategory[]
   categories        Category[]
   currency          Currency?
+}
+
+enum ActivationStatus {
+    DISABLED
+    PENDING
+    ACTIVE
 }

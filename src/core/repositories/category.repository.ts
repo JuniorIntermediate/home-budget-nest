@@ -16,7 +16,7 @@ import {
   IncomeCategoryGetParams,
   OutcomeCategoryGetParams,
 } from '../schema-types/category.get-params';
-import { GetCategoryWithSubCategories } from '../schema-types/category-with-sub-categories.type';
+import { GetCategoryWithSubCategories } from '../schema-types/category-with-include.type';
 
 @Injectable()
 export class CategoryRepository {

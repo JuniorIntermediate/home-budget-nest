@@ -1,5 +1,5 @@
 import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
-import { GetCategoryWithSubCategories } from 'src/core/schema-types/category-with-sub-categories.type';
+import { GetCategoryWithSubCategories } from 'src/core/schema-types/category-with-include.type';
 import { SubCategoryDto } from './sub-category.dto';
 
 export class CategoryDto {
