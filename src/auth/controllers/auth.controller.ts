@@ -28,6 +28,7 @@ export class AuthController {
   @HttpCode(400)
   @ApiCreatedResponse({ description: 'The user has been successfully created.' })
   @ApiBadRequestResponse({ description: 'Provided user already exist in app.' })
+  @ApiInternalServerErrorResponse({ description: 'Unexpected error while sending email.' })
   public async register(@Body() registerDto: RegisterDto) {
     await this.authService.register(registerDto);
   }
@@ -46,9 +47,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.UNAUTHORIZED)
   @ApiBearerAuth()
-  @ApiOkResponse({
-    description: 'The logged user information stored in JWT', type: JwtPayload,
-  })
+  @ApiOkResponse({ description: 'The logged user information stored in JWT', type: JwtPayload })
   @ApiUnauthorizedResponse({ description: 'User are not logged in' })
   public getProfile(@Request() req: RequestUserModel): JwtPayload {
     return req.user;
@@ -57,12 +56,8 @@ export class AuthController {
   @Get('verifyEmailToken/:token')
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.BAD_REQUEST)
-  @ApiOkResponse({
-    description: 'Token was good and user has been successfully verified',
-  })
-  @ApiBadRequestResponse({
-    description: 'Token has been already used or was invalid.',
-  })
+  @ApiOkResponse({ description: 'Token was good and user has been successfully verified' })
+  @ApiBadRequestResponse({ description: 'Token has been already used or was invalid.' })
   public async getVerifyToken(@Param('token') token: string): Promise<boolean> {
     return await this.authService.verifyEmailToken(token);
   }
@@ -70,12 +65,8 @@ export class AuthController {
   @Get('forgot-password/:email')
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.INTERNAL_SERVER_ERROR)
-  @ApiOkResponse({
-    description: 'Email was send properly.',
-  })
-  @ApiInternalServerErrorResponse({
-    description: 'Unexpected error while sending email.',
-  })
+  @ApiOkResponse({ description: 'Email was send properly.' })
+  @ApiInternalServerErrorResponse({ description: 'Unexpected error while sending email.' })
   public async getForgotPasswordToken(@Param('email') email: string): Promise<void> {
     await this.authService.sendEmailForgotPassword(email);
   }
@@ -83,12 +74,9 @@ export class AuthController {
   @Post('reset-password')
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.BAD_REQUEST)
-  @ApiOkResponse({
-    description: 'Password has been successfully changed.',
-  })
-  @ApiBadRequestResponse({
-    description: 'Token has been already used or was invalid.',
-  })
+  @ApiOkResponse({ description: 'Password has been successfully changed.' })
+  @ApiBadRequestResponse({ description: 'Token has been already used or was invalid.' })
+  @ApiInternalServerErrorResponse({ description: 'Unexpected error while sending email.' })
   public async postResetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<boolean> {
     return await this.authService.setNewPassword(resetPasswordDto);
   }

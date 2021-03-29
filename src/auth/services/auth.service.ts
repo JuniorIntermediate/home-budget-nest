@@ -116,7 +116,6 @@ export class AuthService {
       } catch (error) {
         throw new InternalServerErrorException('There were a problem while sending email.');
       }
-
     }
   }
 
