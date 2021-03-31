@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,7 +13,14 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { RequestUserModel } from '../../core/models/request-user.model';
 import { JwtGuard } from '../../auth/guards/jwt.guard';
 import { PayerService } from '../service/payer.service';
@@ -21,7 +29,7 @@ import { CreatePayerDto, PayerDto, UpdatePayerDto } from '../dto/payer.dto';
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 @ApiTags('payer')
-@Controller('payer')
+@Controller('payers')
 export class PayerController {
 
   constructor(private readonly payerService: PayerService) {
@@ -36,20 +44,25 @@ export class PayerController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  @ApiCreatedResponse({ description: 'The payer has been successfully created.' })
+  @ApiCreatedResponse({ description: 'The payer has been successfully created.', type: PayerDto })
   async postCategory(
     @Req() req: RequestUserModel,
-    @Body() payerDto: CreatePayerDto) {
-    await this.payerService.createPayer({ ...payerDto, email: req.user.email });
+    @Body() payerDto: CreatePayerDto): Promise<PayerDto> {
+    return this.payerService.createPayer({ ...payerDto, email: req.user.email });
   }
 
   @HttpCode(HttpStatus.OK)
-  @Put()
-  @ApiOkResponse({ description: 'The payer has been successfully updated.' })
+  @Put(':id')
+  @ApiOkResponse({ description: 'The payer has been successfully updated.', type: PayerDto })
+  @ApiBadRequestResponse({ description: 'Id provided in body are not equal to params.' })
   async updateCategory(
+    @Param('id', ParseIntPipe) id: number,
     @Req() req: RequestUserModel,
-    @Body() payerDto: UpdatePayerDto): Promise<void> {
-    await this.payerService.updatePayer({ ...payerDto, email: req.user.email });
+    @Body() payerDto: UpdatePayerDto): Promise<PayerDto> {
+    if (id !== payerDto.id) {
+      throw new BadRequestException('Id\'s are not equal!');
+    }
+    return this.payerService.updatePayer({ ...payerDto, email: req.user.email });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

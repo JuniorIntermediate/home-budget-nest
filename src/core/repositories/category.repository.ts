@@ -15,9 +15,9 @@ import {
   OutcomeCategoryGetByUniqueFieldParams,
   OutcomeCategoryGetParams,
   OutcomeCategoryUpdateParams,
-  SubCategoryCreateParams,
-  SubCategoryGetByUniqueFieldParams,
-  SubCategoryUpdateParams,
+  SubcategoryCreateParams,
+  SubcategoryGetByUniqueFieldParams,
+  SubcategoryUpdateParams,
 } from '../schema-types/category.params';
 
 @Injectable()
@@ -126,19 +126,19 @@ export class CategoryRepository {
     });
   }
 
-  async findSubCategoryByUniqueField(where: SubCategoryGetByUniqueFieldParams): Promise<SubCategory | null> {
+  async findSubcategoryByUniqueField(where: SubcategoryGetByUniqueFieldParams): Promise<SubCategory | null> {
     return this.prisma.subCategory.findUnique({ where });
   }
 
-  async createSubCategory(data: SubCategoryCreateParams): Promise<SubCategory> {
+  async createSubcategory(data: SubcategoryCreateParams): Promise<SubCategory> {
     return this.prisma.subCategory.create({ data });
   }
 
-  async updateSubCategory(params: SubCategoryUpdateParams): Promise<SubCategory> {
+  async updateSubcategory(params: SubcategoryUpdateParams): Promise<SubCategory> {
     return this.prisma.subCategory.update(params);
   }
 
-  async deleteSubCategory(id: number): Promise<void> {
+  async deleteSubcategory(id: number): Promise<void> {
     await this.prisma.category.update({
       data: {
         isDeleted: true,

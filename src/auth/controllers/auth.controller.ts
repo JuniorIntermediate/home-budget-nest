@@ -53,7 +53,7 @@ export class AuthController {
     return req.user;
   }
 
-  @Get('verifyEmailToken/:token')
+  @Get('verify-token/:token')
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.BAD_REQUEST)
   @ApiOkResponse({ description: 'Token was good and user has been successfully verified' })

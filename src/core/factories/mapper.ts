@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Category, IncomeCategory, OutcomeCategory, Payer, SubCategory } from '@prisma/client';
 import { PayerDto } from '../../payer/dto/payer.dto';
-import { CategoryDto, IncomeCategoryDto, OutcomeCategoryDto, SubCategoryDto } from '../../category/dto';
+import { CategoryDto, IncomeCategoryDto, OutcomeCategoryDto, SubcategoryDto } from '../../category/dto';
 
-type DtoTypes = IncomeCategoryDto | OutcomeCategoryDto | CategoryDto | SubCategoryDto | PayerDto;
+type DtoTypes = IncomeCategoryDto | OutcomeCategoryDto | CategoryDto | SubcategoryDto | PayerDto;
 type InputTypes = IncomeCategory | OutcomeCategory | Category | SubCategory | Payer;
 
 @Injectable()

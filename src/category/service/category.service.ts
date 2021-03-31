@@ -2,17 +2,11 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { CategoryRepository } from '../../core/repositories/category.repository';
 import {
   CategoryDto,
-  CreateCategoryDto,
-  CreateIncomeCategoryDto,
-  CreateOutcomeCategoryDto,
-  CreateSubCategoryDto,
+  CreateSubcategoryDto,
   IncomeCategoryDto,
   OutcomeCategoryDto,
-  SubCategoryDto,
-  UpdateCategoryDto,
-  UpdateIncomeCategoryDto,
-  UpdateOutcomeCategoryDto,
-  UpdateSubCategoryDto,
+  SubcategoryDto,
+  UpdateSubcategoryDto,
 } from '../dto';
 import {
   CategoryCreateParams,
@@ -24,17 +18,77 @@ import {
   OutcomeCategoryCreateParams,
   OutcomeCategoryGetParams,
   OutcomeCategoryUpdateParams,
-  SubCategoryCreateParams,
-  SubCategoryUpdateParams,
+  SubcategoryCreateParams,
+  SubcategoryUpdateParams,
 } from '../../core/schema-types/category.params';
 import { Mapper } from '../../core/factories/mapper';
+import { CategoryTypeEnum } from '../enums/category-type.enum';
+import { BaseCategoryDto, CreateBaseCategoryDto, UpdateBaseCategoryDto } from '../dto/base-category.dto';
+
+type CategoryByTypeReturnListFunction = {
+  [index in CategoryTypeEnum]?: (email: string) => Promise<BaseCategoryDto[]>
+}
+type CategoryByTypeReturnFunction = {
+  [index in CategoryTypeEnum]?: (input: CreateBaseCategoryDto | UpdateBaseCategoryDto) => Promise<BaseCategoryDto>
+}
+type CategoryByTypeNoReturnFunction = {
+  [index in CategoryTypeEnum]?: (id: number) => Promise<void>
+}
 
 @Injectable()
 export class CategoryService {
+  private readonly GET_CATEGORY_BY_TYPE: CategoryByTypeReturnListFunction = {
+    [CategoryTypeEnum.INCOME]: async (email: string) => this.getIncomeCategories(email),
+    [CategoryTypeEnum.OUTCOME]: async (email: string) => this.getOutcomeCategories(email),
+  };
+  private readonly CREATE_CATEGORY_BY_TYPE: CategoryByTypeReturnFunction = {
+    [CategoryTypeEnum.INCOME]: (input: CreateBaseCategoryDto) => this.createIncomeCategory(input),
+    [CategoryTypeEnum.OUTCOME]: (input: CreateBaseCategoryDto) => this.createOutcomeCategory(input),
+    [CategoryTypeEnum.SUBCATEGORY]: (input: CreateSubcategoryDto) => this.createSubcategory(input),
+  };
+  private readonly UPDATE_CATEGORY_BY_TYPE: CategoryByTypeReturnFunction = {
+    [CategoryTypeEnum.INCOME]: (input: UpdateBaseCategoryDto) => this.updateIncomeCategory(input),
+    [CategoryTypeEnum.OUTCOME]: (input: UpdateBaseCategoryDto) => this.updateOutcomeCategory(input),
+    [CategoryTypeEnum.SUBCATEGORY]: (input: UpdateSubcategoryDto) => this.updateSubcategory(input),
+  };
+  private readonly DELETE_CATEGORY_BY_TYPE: CategoryByTypeNoReturnFunction = {
+    [CategoryTypeEnum.INCOME]: (id: number) => this.deleteIncomeCategory(id),
+    [CategoryTypeEnum.OUTCOME]: (id: number) => this.deleteOutcomeCategory(id),
+    [CategoryTypeEnum.SUBCATEGORY]: (id: number) => this.deleteSubcategory(id),
+  };
+
   constructor(private readonly categoryRepository: CategoryRepository, private readonly mapper: Mapper) {
   }
 
-  async createIncomeCategory(incomeCategoryDto: CreateIncomeCategoryDto): Promise<void> {
+  public async getProperCategories(email: string, type?: CategoryTypeEnum): Promise<BaseCategoryDto[]> {
+    if (type) {
+      return this.GET_CATEGORY_BY_TYPE[type](email);
+    }
+    return this.getCategories(email);
+  }
+
+  public async createProperCategory(inputDto: CreateBaseCategoryDto): Promise<BaseCategoryDto> {
+    if (inputDto.type) {
+      return this.CREATE_CATEGORY_BY_TYPE[inputDto.type](inputDto);
+    }
+    return this.createCategory(inputDto);
+  }
+
+  public async updateProperCategory(inputDto: UpdateBaseCategoryDto): Promise<BaseCategoryDto> {
+    if (inputDto.type) {
+      return this.UPDATE_CATEGORY_BY_TYPE[inputDto.type](inputDto);
+    }
+    return this.updateCategory(inputDto);
+  }
+
+  public async deleteProperCategory(id: number, type?: CategoryTypeEnum): Promise<void> {
+    if (type) {
+      await this.DELETE_CATEGORY_BY_TYPE[type](id);
+    }
+    await this.deleteCategory(id);
+  }
+
+  private async createIncomeCategory(incomeCategoryDto: CreateBaseCategoryDto): Promise<IncomeCategoryDto> {
     const incomeCategory = await this.categoryRepository.findIncomeCategoryByUniqueField({ name: incomeCategoryDto.name });
     if (incomeCategory) {
       throw new BadRequestException('The name of category must be unique!');
@@ -48,10 +102,11 @@ export class CategoryService {
         },
       },
     };
-    await this.categoryRepository.createIncomeCategory(data);
+    const createdIncomeCategory = await this.categoryRepository.createIncomeCategory(data);
+    return this.mapper.mapToDto(createdIncomeCategory, IncomeCategoryDto);
   }
 
-  async updateIncomeCategory(incomeCategoryDto: UpdateIncomeCategoryDto): Promise<void> {
+  private async updateIncomeCategory(incomeCategoryDto: UpdateBaseCategoryDto): Promise<IncomeCategoryDto> {
     const incomeCategory = await this.categoryRepository.findIncomeCategoryByUniqueField({ id: incomeCategoryDto.id });
     if (!incomeCategory) {
       throw new NotFoundException('Category with provided id doesn\'t exist!');
@@ -68,10 +123,11 @@ export class CategoryService {
         id: incomeCategoryDto.id,
       },
     };
-    await this.categoryRepository.updateIncomeCategory(params);
+    const updatedIncomeCategory = await this.categoryRepository.updateIncomeCategory(params);
+    return this.mapper.mapToDto(updatedIncomeCategory, IncomeCategoryDto);
   }
 
-  async getIncomeCategories(email: string): Promise<IncomeCategoryDto[]> {
+  private async getIncomeCategories(email: string): Promise<IncomeCategoryDto[]> {
     const params: IncomeCategoryGetParams = {
       where: {
         user: {
@@ -84,11 +140,11 @@ export class CategoryService {
     return categories.map(category => this.mapper.mapToDto(category, IncomeCategoryDto));
   }
 
-  async deleteIncomeCategory(id: number): Promise<void> {
+  private async deleteIncomeCategory(id: number): Promise<void> {
     await this.categoryRepository.deleteIncomeCategory(id);
   }
 
-  async createOutcomeCategory(outcomeCategoryDto: CreateOutcomeCategoryDto): Promise<void> {
+  private async createOutcomeCategory(outcomeCategoryDto: CreateBaseCategoryDto): Promise<OutcomeCategoryDto> {
     const outcomeCategory = await this.categoryRepository.findOutcomeCategoryByUniqueField({ name: outcomeCategoryDto.name });
     if (outcomeCategory) {
       throw new BadRequestException('The name of category must be unique!');
@@ -102,10 +158,11 @@ export class CategoryService {
         },
       },
     };
-    await this.categoryRepository.createOutcomeCategory(data);
+    const createdOutcomeCategory = await this.categoryRepository.createOutcomeCategory(data);
+    return this.mapper.mapToDto(createdOutcomeCategory, OutcomeCategoryDto);
   }
 
-  async updateOutcomeCategory(outcomeCategoryDto: UpdateOutcomeCategoryDto): Promise<void> {
+  private async updateOutcomeCategory(outcomeCategoryDto: UpdateBaseCategoryDto): Promise<OutcomeCategoryDto> {
     const outcomeCategory = await this.categoryRepository.findOutcomeCategoryByUniqueField({ id: outcomeCategoryDto.id });
     if (!outcomeCategory) {
       throw new NotFoundException('Category with provided id doesn\'t exist!');
@@ -122,10 +179,11 @@ export class CategoryService {
         id: outcomeCategoryDto.id,
       },
     };
-    await this.categoryRepository.updateOutcomeCategory(params);
+    const updatedOutcomeCategory = await this.categoryRepository.updateOutcomeCategory(params);
+    return this.mapper.mapToDto(updatedOutcomeCategory, OutcomeCategoryDto);
   }
 
-  async getOutcomeCategories(email: string): Promise<OutcomeCategoryDto[]> {
+  private async getOutcomeCategories(email: string): Promise<OutcomeCategoryDto[]> {
     const params: OutcomeCategoryGetParams = {
       where: {
         user: {
@@ -138,11 +196,11 @@ export class CategoryService {
     return categories.map(category => this.mapper.mapToDto(category, OutcomeCategoryDto));
   }
 
-  async deleteOutcomeCategory(id: number): Promise<void> {
+  private async deleteOutcomeCategory(id: number): Promise<void> {
     await this.categoryRepository.deleteOutcomeCategory(id);
   }
 
-  async createCategory(categoryDto: CreateCategoryDto): Promise<void> {
+  private async createCategory(categoryDto: CreateBaseCategoryDto): Promise<CategoryDto> {
     const category = await this.categoryRepository.findCategoryByUniqueField({ name: categoryDto.name });
     if (category) {
       throw new BadRequestException('The name of category must be unique!');
@@ -156,10 +214,11 @@ export class CategoryService {
         },
       },
     };
-    await this.categoryRepository.createCategory(data);
+    const createdCategory = await this.categoryRepository.createCategory(data);
+    return this.mapper.mapToDto(createdCategory, CategoryDto);
   }
 
-  async updateCategory(categoryDto: UpdateCategoryDto): Promise<void> {
+  private async updateCategory(categoryDto: UpdateBaseCategoryDto): Promise<CategoryDto> {
     const category = await this.categoryRepository.findCategoryByUniqueField({ id: categoryDto.id });
     if (!category) {
       throw new NotFoundException('Category with provided id doesn\'t exist!');
@@ -176,10 +235,11 @@ export class CategoryService {
         id: categoryDto.id,
       },
     };
-    await this.categoryRepository.updateCategory(params);
+    const updatedCategory = await this.categoryRepository.updateCategory(params);
+    return this.mapper.mapToDto(updatedCategory, CategoryDto);
   }
 
-  async getCategories(email: string): Promise<CategoryDto[]> {
+  private async getCategories(email: string): Promise<CategoryDto[]> {
     const params: CategoryGetParams = {
       where: {
         user: {
@@ -191,16 +251,16 @@ export class CategoryService {
     const categories = await this.categoryRepository.getCategories(params);
     return categories.map(category => ({
       ...this.mapper.mapToDto(category, CategoryDto),
-      subCategories: category.subCategories.map(subCategory => this.mapper.mapToDto(subCategory, SubCategoryDto)),
+      subCategories: category.subCategories.map(subCategory => this.mapper.mapToDto(subCategory, SubcategoryDto)),
     }));
   }
 
-  async deleteCategory(id: number): Promise<void> {
+  private async deleteCategory(id: number): Promise<void> {
     await this.categoryRepository.deleteCategory(id);
   }
 
-  async createSubCategory(subCategoryDto: CreateSubCategoryDto): Promise<void> {
-    const subCategory = await this.categoryRepository.findSubCategoryByUniqueField({ name: subCategoryDto.name });
+  private async createSubcategory(subCategoryDto: CreateSubcategoryDto): Promise<SubcategoryDto> {
+    const subCategory = await this.categoryRepository.findSubcategoryByUniqueField({ name: subCategoryDto.name });
     const parentCategory = await this.categoryRepository.findCategoryByUniqueField({ id: subCategoryDto.parentId });
     if (!parentCategory) {
       throw new BadRequestException('Parent category with provided id doesn\'t exist!');
@@ -208,7 +268,7 @@ export class CategoryService {
     if (subCategory) {
       throw new BadRequestException('The name of category must be unique!');
     }
-    const data: SubCategoryCreateParams = {
+    const data: SubcategoryCreateParams = {
       name: subCategoryDto.name,
       icon: subCategoryDto.icon,
       category: {
@@ -217,11 +277,12 @@ export class CategoryService {
         },
       },
     };
-    await this.categoryRepository.createSubCategory(data);
+    const createdSubcategory = await this.categoryRepository.createSubcategory(data);
+    return this.mapper.mapToDto(createdSubcategory, SubcategoryDto);
   }
 
-  async updateSubCategory(subCategoryDto: UpdateSubCategoryDto): Promise<void> {
-    const subCategory = await this.categoryRepository.findSubCategoryByUniqueField({ name: subCategoryDto.name });
+  private async updateSubcategory(subCategoryDto: UpdateSubcategoryDto): Promise<SubcategoryDto> {
+    const subCategory = await this.categoryRepository.findSubcategoryByUniqueField({ name: subCategoryDto.name });
     const parentCategory = await this.categoryRepository.findCategoryByUniqueField({ id: subCategoryDto.parentId });
     if (!parentCategory) {
       throw new BadRequestException('Parent category with provided id doesn\'t exist!');
@@ -229,7 +290,7 @@ export class CategoryService {
     if (subCategory && subCategory.id !== subCategoryDto.id) {
       throw new BadRequestException('The name of category must be unique!');
     }
-    const params: SubCategoryUpdateParams = {
+    const params: SubcategoryUpdateParams = {
       data: {
         name: subCategoryDto.name,
         icon: subCategoryDto.icon,
@@ -238,10 +299,11 @@ export class CategoryService {
         id: subCategoryDto.id,
       },
     };
-    await this.categoryRepository.updateSubCategory(params);
+    const updatedSubcategory = await this.categoryRepository.updateSubcategory(params);
+    return this.mapper.mapToDto(updatedSubcategory, SubcategoryDto);
   }
 
-  async deleteSubCategory(id: number): Promise<void> {
-    await this.categoryRepository.deleteSubCategory(id);
+  private async deleteSubcategory(id: number): Promise<void> {
+    await this.categoryRepository.deleteSubcategory(id);
   }
 }
