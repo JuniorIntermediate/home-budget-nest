@@ -14,3 +14,8 @@ export type CategoryUpdateParams = {
   where: Prisma.CategoryWhereUniqueInput,
   data: Prisma.CategoryUpdateInput
 }
+
+export type SubCategoryUpdateParams = {
+  where: Prisma.SubCategoryWhereUniqueInput,
+  data: Prisma.SubCategoryUpdateInput
+}

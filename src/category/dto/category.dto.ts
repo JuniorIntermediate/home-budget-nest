@@ -1,5 +1,5 @@
 import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
-import { GetCategoryWithSubCategories } from 'src/core/schema-types/category-with-include.type';
+import { Category } from '@prisma/client';
 import { SubCategoryDto } from './sub-category.dto';
 
 export class CategoryDto {
@@ -12,29 +12,24 @@ export class CategoryDto {
   @ApiProperty()
   icon: string;
 
-  @ApiProperty({ readOnly: true })
+  @ApiHideProperty()
   userId?: number;
 
   @ApiProperty({ type: [SubCategoryDto] })
   subCategories?: SubCategoryDto[];
 
-  constructor(input?: Partial<GetCategoryWithSubCategories>) {
+  constructor(input?: Partial<Category>) {
     this.id = input.id;
     this.name = input.name;
     this.icon = input.icon;
-    this.subCategories = input.subCategories.map(subCategory => ({
-      id: subCategory.id,
-      icon: subCategory.icon,
-      name: subCategory.name,
-    }));
     this.userId = input.userId;
   }
 }
 
-export class CreateCategoryDto extends OmitType(CategoryDto, ['id'] as const) {
+export class CreateCategoryDto extends OmitType(CategoryDto, ['id', 'subCategories'] as const) {
   @ApiHideProperty()
   email: string;
 }
 
-export class UpdateCategoryDto extends IntersectionType(CategoryDto, CreateCategoryDto) {
+export class UpdateCategoryDto extends IntersectionType(OmitType(CategoryDto, ['subCategories'] as const), CreateCategoryDto) {
 }

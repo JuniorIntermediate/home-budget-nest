@@ -1,4 +1,5 @@
 import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
+import { OutcomeCategory } from '@prisma/client';
 
 export class OutcomeCategoryDto {
   @ApiProperty()
@@ -10,10 +11,10 @@ export class OutcomeCategoryDto {
   @ApiProperty()
   icon: string;
 
-  @ApiProperty({ readOnly: true })
+  @ApiHideProperty()
   userId?: number;
 
-  constructor(input?: Partial<OutcomeCategoryDto>) {
+  constructor(input?: Partial<OutcomeCategory>) {
     this.id = input.id;
     this.name = input.name;
     this.icon = input.icon;
