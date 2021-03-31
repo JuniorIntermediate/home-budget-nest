@@ -4,9 +4,10 @@ import { IncomeCategoryController } from './controllers/income-category.controll
 import { OutcomeCategoryController } from './controllers/outcome-category.controller';
 import { CategoryFactory } from './factory/category.factory';
 import { CategoryController } from './controllers/category.controller';
+import { SubCategoryController } from './controllers/sub-category.controller';
 
 @Module({
   providers: [CategoryService, CategoryFactory],
-  controllers: [IncomeCategoryController, OutcomeCategoryController, CategoryController]
+  controllers: [IncomeCategoryController, OutcomeCategoryController, CategoryController, SubCategoryController]
 })
 export class CategoryModule {}

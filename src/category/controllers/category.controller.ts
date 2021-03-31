@@ -54,7 +54,7 @@ export class CategoryController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   @ApiNoContentResponse({ description: 'The outcome category has been successfully removed.' })
-  async deleteOutcomeCategory(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async deleteCategory(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.categoryService.deleteCategory(id);
   }
 }

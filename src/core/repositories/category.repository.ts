@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Category, IncomeCategory, OutcomeCategory, Prisma } from '@prisma/client';
+import { Category, IncomeCategory, OutcomeCategory, Prisma, SubCategory } from '@prisma/client';
 import {
   CategoryUpdateParams,
   IncomeCategoryUpdateParams,
   OutcomeCategoryUpdateParams,
+  SubCategoryUpdateParams,
 } from '../schema-types/category.update-params';
 import {
   CategoryCreateParams,
   IncomeCategoryCreateParams,
   OutcomeCategoryCreateParams,
+  SubCategoryCreateParams,
 } from '../schema-types/category.create-params';
 import {
   CategoryGetParams,
@@ -29,8 +31,7 @@ export class CategoryRepository {
   }
 
   async updateIncomeCategory(params: IncomeCategoryUpdateParams): Promise<IncomeCategory> {
-    const { where, data } = params;
-    return this.prisma.incomeCategory.update({ where, data });
+    return this.prisma.incomeCategory.update(params);
   }
 
   async deleteIncomeCategory(id: number): Promise<void> {
@@ -45,15 +46,11 @@ export class CategoryRepository {
   }
 
   async getIncomeCategories(params: IncomeCategoryGetParams): Promise<IncomeCategory[]> {
-    return this.prisma.incomeCategory.findMany({
-      ...params,
-    });
+    return this.prisma.incomeCategory.findMany(params);
   }
 
   async findIncomeCategoryByUniqueField(where: Prisma.IncomeCategoryWhereUniqueInput): Promise<IncomeCategory | null> {
-    return this.prisma.incomeCategory.findUnique({
-      where,
-    });
+    return this.prisma.incomeCategory.findUnique({ where });
   }
 
   async createOutcomeCategory(data: OutcomeCategoryCreateParams): Promise<OutcomeCategory> {
@@ -61,8 +58,7 @@ export class CategoryRepository {
   }
 
   async updateOutcomeCategory(params: OutcomeCategoryUpdateParams): Promise<OutcomeCategory> {
-    const { where, data } = params;
-    return this.prisma.outcomeCategory.update({ where, data });
+    return this.prisma.outcomeCategory.update(params);
   }
 
   async getOutcomeCategories(params: OutcomeCategoryGetParams): Promise<OutcomeCategory[]> {
@@ -70,9 +66,7 @@ export class CategoryRepository {
   }
 
   async findOutcomeCategoryByUniqueField(where: Prisma.OutcomeCategoryWhereUniqueInput): Promise<OutcomeCategory | null> {
-    return this.prisma.outcomeCategory.findUnique({
-      where,
-    });
+    return this.prisma.outcomeCategory.findUnique({ where });
   }
 
   async deleteOutcomeCategory(id: number): Promise<void> {
@@ -91,28 +85,60 @@ export class CategoryRepository {
   }
 
   async updateCategory(params: CategoryUpdateParams): Promise<Category> {
-    const { where, data } = params;
-    return this.prisma.category.update({ where, data });
+    return this.prisma.category.update(params);
   }
 
   async getCategories(params: CategoryGetParams): Promise<GetCategoryWithSubCategories[]> {
     return this.prisma.category.findMany({
-      ...params, include: {
-        subCategories: true,
+      ...params,
+      include: {
+        subCategories: {
+          where: {
+            isDeleted: false,
+          },
+        },
       },
     });
   }
 
-  async findCategoryByUniqueField(where: Prisma.CategoryWhereUniqueInput): Promise<GetCategoryWithSubCategories | null> {
-    return this.prisma.category.findFirst({
-      where,
-      include: {
-        subCategories: true,
-      },
-    });
+  async findCategoryByUniqueField(where: Prisma.CategoryWhereUniqueInput): Promise<Category | null> {
+    return this.prisma.category.findUnique({ where });
   }
 
   async deleteCategory(id: number): Promise<void> {
+    await this.prisma.category.update({
+      data: {
+        isDeleted: true,
+        subCategories: {
+          updateMany: {
+            where: {
+              categoryId: id,
+            },
+            data: {
+              isDeleted: true,
+            },
+          },
+        },
+      },
+      where: {
+        id,
+      },
+    });
+  }
+
+  async findSubCategoryByUniqueField(where: Prisma.SubCategoryWhereUniqueInput): Promise<SubCategory | null> {
+    return this.prisma.subCategory.findUnique({ where });
+  }
+
+  async createSubCategory(data: SubCategoryCreateParams): Promise<SubCategory> {
+    return this.prisma.subCategory.create({ data });
+  }
+
+  async updateSubCategory(params: SubCategoryUpdateParams): Promise<SubCategory> {
+    return this.prisma.subCategory.update(params);
+  }
+
+  async deleteSubCategory(id: number): Promise<void> {
     await this.prisma.category.update({
       data: {
         isDeleted: true,
