@@ -7,7 +7,7 @@ type DtoTypes = IncomeCategoryDto | OutcomeCategoryDto | CategoryDto | SubCatego
 type InputTypes = IncomeCategory | OutcomeCategory | Category | SubCategory | Payer;
 
 @Injectable()
-export class Factory {
+export class Mapper {
 
   mapToDto<T extends InputTypes, Y extends DtoTypes>(model: T, ctor: new (model: T) => Y): Y {
     return new ctor(model);

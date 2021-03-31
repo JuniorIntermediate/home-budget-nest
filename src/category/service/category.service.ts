@@ -27,11 +27,11 @@ import {
   SubCategoryCreateParams,
   SubCategoryUpdateParams,
 } from '../../core/schema-types/category.params';
-import { Factory } from '../../core/factories/factory';
+import { Mapper } from '../../core/factories/mapper';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly categoryRepository: CategoryRepository, private readonly factory: Factory) {
+  constructor(private readonly categoryRepository: CategoryRepository, private readonly mapper: Mapper) {
   }
 
   async createIncomeCategory(incomeCategoryDto: CreateIncomeCategoryDto): Promise<void> {
@@ -81,7 +81,7 @@ export class CategoryService {
       },
     };
     const categories = await this.categoryRepository.getIncomeCategories(params);
-    return categories.map(category => this.factory.mapToDto(category, IncomeCategoryDto));
+    return categories.map(category => this.mapper.mapToDto(category, IncomeCategoryDto));
   }
 
   async deleteIncomeCategory(id: number): Promise<void> {
@@ -135,7 +135,7 @@ export class CategoryService {
       },
     };
     const categories = await this.categoryRepository.getOutcomeCategories(params);
-    return categories.map(category => this.factory.mapToDto(category, OutcomeCategoryDto));
+    return categories.map(category => this.mapper.mapToDto(category, OutcomeCategoryDto));
   }
 
   async deleteOutcomeCategory(id: number): Promise<void> {
@@ -190,8 +190,8 @@ export class CategoryService {
     };
     const categories = await this.categoryRepository.getCategories(params);
     return categories.map(category => ({
-      ...this.factory.mapToDto(category, CategoryDto),
-      subCategories: category.subCategories.map(subCategory => this.factory.mapToDto(subCategory, SubCategoryDto)),
+      ...this.mapper.mapToDto(category, CategoryDto),
+      subCategories: category.subCategories.map(subCategory => this.mapper.mapToDto(subCategory, SubCategoryDto)),
     }));
   }
 

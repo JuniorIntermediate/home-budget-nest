@@ -3,7 +3,7 @@ import { PayerRepository } from '../../core/repositories/payer.repository';
 import { UserRepository } from '../../core/repositories/user.repository';
 import { CreatePayerDto, PayerDto, UpdatePayerDto } from '../dto/payer.dto';
 import { PayerCreateParams, PayerGetParams, PayerUpdateParams } from '../../core/schema-types/payer.params';
-import { Factory } from '../../core/factories/factory';
+import { Mapper } from '../../core/factories/mapper';
 
 @Injectable()
 export class PayerService {
@@ -11,7 +11,7 @@ export class PayerService {
   constructor(
     private readonly payerRepository: PayerRepository,
     private readonly userRepository: UserRepository,
-    private factory: Factory,
+    private mapper: Mapper,
   ) {
   }
 
@@ -69,6 +69,6 @@ export class PayerService {
       },
     };
     const payers = await this.payerRepository.getPayers(params);
-    return payers.map(payer => this.factory.mapToDto(payer, PayerDto));
+    return payers.map(payer => this.mapper.mapToDto(payer, PayerDto));
   }
 }

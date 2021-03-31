@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Request, UseG
 import { AuthService } from '../services/auth.service';
 import { RegisterDto } from '../dto/register.dto';
 import { LoginDto } from '../dto/login.dto';
-import { JwtGuard } from '../guard/jwt.guard';
+import { JwtGuard } from '../guards/jwt.guard';
 import { JwtPayload } from '../dto/jwt.payload';
 import { TokenResponse } from '../dto/token.response';
 import {

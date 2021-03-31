@@ -2,7 +2,6 @@ import { Prisma } from '@prisma/client';
 
 export type PayerCreateParams = Prisma.PayerCreateInput
 
-
 export type PayerUpdateParams = {
   where: Prisma.PayerWhereUniqueInput,
   data: Prisma.PayerUpdateInput

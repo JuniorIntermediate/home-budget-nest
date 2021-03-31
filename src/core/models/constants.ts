@@ -26,3 +26,4 @@ export const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 export const SENDGRID_EMAIL_FROM = process.env.SENDGRID_FROM;
 export const MAIL_PROVIDER = process.env.MAIL_PROVIDER;
 export const IS_SMTP_PROVIDER = MAIL_PROVIDER === EmailProviderEnum.SMTP;
+export const CURRENCY_EXTERNAL_API = process.env.CURRENCY_EXTERNAL_API;

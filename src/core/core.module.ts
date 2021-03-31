@@ -6,11 +6,13 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { IS_SMTP_PROVIDER, SENDGRID_API_KEY, SMTP_CONFIG, SMTP_FROM } from './models/constants';
 import { SendGridModule } from '@ntegral/nestjs-sendgrid';
 import { PayerRepository } from './repositories/payer.repository';
-import { Factory } from './factories/factory';
+import { Mapper } from './factories/mapper';
+import { CurrencyRepository } from './repositories/currency.repository';
 
 const repositories = [
   UserRepository,
   PayerRepository,
+  CurrencyRepository,
   CategoryRepository,
 ];
 
@@ -31,11 +33,11 @@ export class CoreModule {
   static register(): DynamicModule {
     return {
       module: CoreModule,
-      providers: [PrismaService, Factory, ...repositories],
+      providers: [PrismaService, Mapper, ...repositories],
       imports: [
         importMailerModuleProvider,
       ],
-      exports: [PrismaService, Factory, ...repositories, exportMailerModuleProvider],
+      exports: [PrismaService, Mapper, ...repositories, exportMailerModuleProvider],
     };
   }
 }
