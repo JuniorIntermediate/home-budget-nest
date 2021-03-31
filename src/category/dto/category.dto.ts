@@ -12,9 +12,6 @@ export class CategoryDto {
   @ApiProperty()
   icon: string;
 
-  @ApiHideProperty()
-  userId?: number;
-
   @ApiProperty({ type: [SubCategoryDto] })
   subCategories?: SubCategoryDto[];
 
@@ -22,7 +19,6 @@ export class CategoryDto {
     this.id = input.id;
     this.name = input.name;
     this.icon = input.icon;
-    this.userId = input.userId;
   }
 }
 

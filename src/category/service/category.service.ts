@@ -1,31 +1,37 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CategoryRepository } from '../../core/repositories/category.repository';
-import { CreateIncomeCategoryDto, IncomeCategoryDto, UpdateIncomeCategoryDto } from '../dto/income-category.dto';
+import {
+  CategoryDto,
+  CreateCategoryDto,
+  CreateIncomeCategoryDto,
+  CreateOutcomeCategoryDto,
+  CreateSubCategoryDto,
+  IncomeCategoryDto,
+  OutcomeCategoryDto,
+  SubCategoryDto,
+  UpdateCategoryDto,
+  UpdateIncomeCategoryDto,
+  UpdateOutcomeCategoryDto,
+  UpdateSubCategoryDto,
+} from '../dto';
 import {
   CategoryCreateParams,
-  IncomeCategoryCreateParams,
-  OutcomeCategoryCreateParams,
-  SubCategoryCreateParams,
-} from '../../core/schema-types/category.create-params';
-import {
-  CategoryUpdateParams,
-  IncomeCategoryUpdateParams,
-  OutcomeCategoryUpdateParams,
-  SubCategoryUpdateParams,
-} from '../../core/schema-types/category.update-params';
-import {
   CategoryGetParams,
+  CategoryUpdateParams,
+  IncomeCategoryCreateParams,
   IncomeCategoryGetParams,
+  IncomeCategoryUpdateParams,
+  OutcomeCategoryCreateParams,
   OutcomeCategoryGetParams,
-} from '../../core/schema-types/category.get-params';
-import { CreateOutcomeCategoryDto, OutcomeCategoryDto, UpdateOutcomeCategoryDto } from '../dto/outcome-category.dto';
-import { CategoryFactory } from '../factory/category.factory';
-import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
-import { CreateSubCategoryDto, SubCategoryDto, UpdateSubCategoryDto } from '../dto/sub-category.dto';
+  OutcomeCategoryUpdateParams,
+  SubCategoryCreateParams,
+  SubCategoryUpdateParams,
+} from '../../core/schema-types/category.params';
+import { Factory } from '../../core/factories/factory';
 
 @Injectable()
 export class CategoryService {
-  constructor(private readonly categoryRepository: CategoryRepository, private readonly factory: CategoryFactory) {
+  constructor(private readonly categoryRepository: CategoryRepository, private readonly factory: Factory) {
   }
 
   async createIncomeCategory(incomeCategoryDto: CreateIncomeCategoryDto): Promise<void> {

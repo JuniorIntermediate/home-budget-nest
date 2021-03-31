@@ -1,5 +1,9 @@
 import { Prisma } from '@prisma/client';
 
+export type UserGetByUniqueParams = Prisma.UserWhereUniqueInput;
+export type UserGetParams = Prisma.UserWhereInput;
+export type UserCreateParams = Prisma.UserCreateInput;
+
 export type UserUpdateParams = {
   where: Prisma.UserWhereUniqueInput,
   data: Prisma.UserUpdateInput

@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Category, IncomeCategory, OutcomeCategory, Prisma, SubCategory } from '@prisma/client';
-import {
-  CategoryUpdateParams,
-  IncomeCategoryUpdateParams,
-  OutcomeCategoryUpdateParams,
-  SubCategoryUpdateParams,
-} from '../schema-types/category.update-params';
+import { Category, IncomeCategory, OutcomeCategory, SubCategory } from '@prisma/client';
 import {
   CategoryCreateParams,
-  IncomeCategoryCreateParams,
-  OutcomeCategoryCreateParams,
-  SubCategoryCreateParams,
-} from '../schema-types/category.create-params';
-import {
+  CategoryGetByUniqueFieldParams,
   CategoryGetParams,
+  CategoryUpdateParams,
+  GetCategoryWithSubCategories,
+  IncomeCategoryCreateParams,
+  IncomeCategoryGetByUniqueFieldParams,
   IncomeCategoryGetParams,
+  IncomeCategoryUpdateParams,
+  OutcomeCategoryCreateParams,
+  OutcomeCategoryGetByUniqueFieldParams,
   OutcomeCategoryGetParams,
-} from '../schema-types/category.get-params';
-import { GetCategoryWithSubCategories } from '../schema-types/category-with-include.type';
+  OutcomeCategoryUpdateParams,
+  SubCategoryCreateParams,
+  SubCategoryGetByUniqueFieldParams,
+  SubCategoryUpdateParams,
+} from '../schema-types/category.params';
 
 @Injectable()
 export class CategoryRepository {
@@ -49,7 +49,7 @@ export class CategoryRepository {
     return this.prisma.incomeCategory.findMany(params);
   }
 
-  async findIncomeCategoryByUniqueField(where: Prisma.IncomeCategoryWhereUniqueInput): Promise<IncomeCategory | null> {
+  async findIncomeCategoryByUniqueField(where: IncomeCategoryGetByUniqueFieldParams): Promise<IncomeCategory | null> {
     return this.prisma.incomeCategory.findUnique({ where });
   }
 
@@ -65,7 +65,7 @@ export class CategoryRepository {
     return this.prisma.outcomeCategory.findMany(params);
   }
 
-  async findOutcomeCategoryByUniqueField(where: Prisma.OutcomeCategoryWhereUniqueInput): Promise<OutcomeCategory | null> {
+  async findOutcomeCategoryByUniqueField(where: OutcomeCategoryGetByUniqueFieldParams): Promise<OutcomeCategory | null> {
     return this.prisma.outcomeCategory.findUnique({ where });
   }
 
@@ -101,7 +101,7 @@ export class CategoryRepository {
     });
   }
 
-  async findCategoryByUniqueField(where: Prisma.CategoryWhereUniqueInput): Promise<Category | null> {
+  async findCategoryByUniqueField(where: CategoryGetByUniqueFieldParams): Promise<Category | null> {
     return this.prisma.category.findUnique({ where });
   }
 
@@ -126,7 +126,7 @@ export class CategoryRepository {
     });
   }
 
-  async findSubCategoryByUniqueField(where: Prisma.SubCategoryWhereUniqueInput): Promise<SubCategory | null> {
+  async findSubCategoryByUniqueField(where: SubCategoryGetByUniqueFieldParams): Promise<SubCategory | null> {
     return this.prisma.subCategory.findUnique({ where });
   }
 

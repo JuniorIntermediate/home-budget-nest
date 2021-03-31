@@ -11,14 +11,10 @@ export class OutcomeCategoryDto {
   @ApiProperty()
   icon: string;
 
-  @ApiHideProperty()
-  userId?: number;
-
   constructor(input?: Partial<OutcomeCategory>) {
     this.id = input.id;
     this.name = input.name;
     this.icon = input.icon;
-    this.userId = input.userId;
   }
 }
 
