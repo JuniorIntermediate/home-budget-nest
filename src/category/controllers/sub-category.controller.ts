@@ -10,7 +10,7 @@ import {
   Put,
   UseGuards,
 } from '@nestjs/common';
-import { JwtGuard } from '../../auth/guard/jwt.guard';
+import { JwtGuard } from '../../auth/guards/jwt.guard';
 import { CategoryService } from '../service/category.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { CreateSubCategoryDto, UpdateSubCategoryDto } from '../dto';

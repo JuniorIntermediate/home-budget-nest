@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RequestUserModel } from '../../core/models/request-user.model';
-import { JwtGuard } from '../../auth/guard/jwt.guard';
+import { JwtGuard } from '../../auth/guards/jwt.guard';
 import { PayerService } from '../service/payer.service';
 import { CreatePayerDto, PayerDto, UpdatePayerDto } from '../dto/payer.dto';
 

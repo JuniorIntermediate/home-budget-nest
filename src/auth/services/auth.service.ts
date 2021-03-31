@@ -13,7 +13,7 @@ import { User } from '@prisma/client';
 import { JwtPayload } from '../dto/jwt.payload';
 import * as bcrypt from 'bcrypt';
 import { TokenResponse } from '../dto/token.response';
-import { PasswordInterface } from '../interface/password.interface';
+import { PasswordInterface } from '../interfaces/password.interface';
 import { ActivationStatus, UserUpdateParams } from '../../core/schema-types/user.params';
 import { MailerService } from '@nestjs-modules/mailer';
 import { IS_SMTP_PROVIDER, SENDGRID_EMAIL_FROM, SMTP_FROM, WEB_URL } from '../../core/models/constants';
