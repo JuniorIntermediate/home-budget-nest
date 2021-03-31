@@ -67,16 +67,16 @@ export class CategoryService {
     return this.getCategories(email);
   }
 
-  public async createProperCategory(inputDto: CreateBaseCategoryDto, type: CategoryTypeEnum): Promise<BaseCategoryDto> {
-    if (type) {
-      return this.CREATE_CATEGORY_BY_TYPE[type](inputDto);
+  public async createProperCategory(inputDto: CreateBaseCategoryDto): Promise<BaseCategoryDto> {
+    if (inputDto.type) {
+      return this.CREATE_CATEGORY_BY_TYPE[inputDto.type](inputDto);
     }
     return this.createCategory(inputDto);
   }
 
-  public async updateProperCategory(inputDto: UpdateBaseCategoryDto, type?: CategoryTypeEnum): Promise<BaseCategoryDto> {
-    if (type) {
-      return this.UPDATE_CATEGORY_BY_TYPE[type](inputDto);
+  public async updateProperCategory(inputDto: UpdateBaseCategoryDto): Promise<BaseCategoryDto> {
+    if (inputDto.type) {
+      return this.UPDATE_CATEGORY_BY_TYPE[inputDto.type](inputDto);
     }
     return this.updateCategory(inputDto);
   }

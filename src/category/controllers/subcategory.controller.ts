@@ -35,7 +35,7 @@ export class SubcategoryController {
     if (parentId !== subCategoryDto.parentId) {
       throw new BadRequestException('Id\'s are not equal!');
     }
-    await this.categoryService.createProperCategory(subCategoryDto, CategoryTypeEnum.SUBCATEGORY);
+    await this.categoryService.createProperCategory({ ...subCategoryDto, type: CategoryTypeEnum.SUBCATEGORY });
   }
 
   @HttpCode(HttpStatus.OK)
@@ -49,7 +49,7 @@ export class SubcategoryController {
     if (parentId !== subCategoryDto.parentId && id !== subCategoryDto.id) {
       throw new BadRequestException('Id\'s are not equal!');
     }
-    await this.categoryService.updateProperCategory(subCategoryDto, CategoryTypeEnum.SUBCATEGORY);
+    await this.categoryService.updateProperCategory({ ...subCategoryDto, type: CategoryTypeEnum.SUBCATEGORY });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

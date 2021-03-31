@@ -72,52 +72,32 @@ export class CategoryController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  @ApiQuery({
-    name: 'type',
-    enum: [CategoryTypeEnum.INCOME, CategoryTypeEnum.OUTCOME],
-    required: false,
-    description: 'Update specific category type.',
-  })
   @ApiOperation({ summary: 'Create category of proper type (if provided)' })
   @ApiCreatedResponse({ description: 'The category has been successfully created.', type: CategoryDto })
   async postCategory(
-    @Query('type') type: CategoryTypeEnum,
     @Req() req: RequestUserModel,
     @Body() categoryDto: CreateBaseCategoryDto): Promise<BaseCategoryDto> {
-    return this.categoryService.createProperCategory({ ...categoryDto, email: req.user.email }, type);
+    return this.categoryService.createProperCategory({ ...categoryDto, email: req.user.email });
   }
 
   @HttpCode(HttpStatus.OK)
   @Put(':id')
   @ApiOperation({ summary: 'Update category of proper type (if provided)' })
-  @ApiQuery({
-    name: 'type',
-    enum: [CategoryTypeEnum.INCOME, CategoryTypeEnum.OUTCOME],
-    required: false,
-    description: 'Update specific category type.',
-  })
   @ApiOkResponse({ description: 'The category has been successfully updated.', type: CategoryDto })
   @ApiBadRequestResponse({ description: 'Id provided in body are not equal to params.' })
   async updateCategory(
-    @Query('type') type: CategoryTypeEnum,
     @Param('id', ParseIntPipe) id: number,
     @Req() req: RequestUserModel,
     @Body() categoryDto: UpdateBaseCategoryDto): Promise<BaseCategoryDto> {
     if (id !== categoryDto.id) {
       throw new BadRequestException('Id\'s are not equal!');
     }
-    return this.categoryService.updateProperCategory({ ...categoryDto, email: req.user.email }, type);
+    return this.categoryService.updateProperCategory({ ...categoryDto, email: req.user.email });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete category of proper type (if provided)' })
-  @ApiQuery({
-    name: 'type',
-    enum: [CategoryTypeEnum.INCOME, CategoryTypeEnum.OUTCOME],
-    required: false,
-    description: 'Delete specific category type.',
-  })
   @ApiNoContentResponse({ description: 'The category has been successfully removed.' })
   async deleteCategory(
     @Query('type') type: CategoryTypeEnum,

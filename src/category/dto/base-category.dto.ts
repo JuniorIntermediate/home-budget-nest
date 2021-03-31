@@ -1,5 +1,6 @@
 import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 import { Category, IncomeCategory, OutcomeCategory, SubCategory } from '@prisma/client';
+import { CategoryTypeEnum } from '../enums/category-type.enum';
 
 export class BaseCategoryDto {
   @ApiProperty()
@@ -21,6 +22,10 @@ export class BaseCategoryDto {
 export class CreateBaseCategoryDto extends OmitType(BaseCategoryDto, ['id'] as const) {
   @ApiHideProperty()
   email: string;
+  @ApiProperty({
+    enum: [CategoryTypeEnum.INCOME, CategoryTypeEnum.OUTCOME],
+  })
+  type: CategoryTypeEnum;
 }
 
 export class UpdateBaseCategoryDto extends IntersectionType(BaseCategoryDto, CreateBaseCategoryDto) {

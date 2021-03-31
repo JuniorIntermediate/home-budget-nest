@@ -1,6 +1,7 @@
-import { ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
 import { SubCategory } from '@prisma/client';
-import { BaseCategoryDto, CreateBaseCategoryDto, UpdateBaseCategoryDto } from './base-category.dto';
+import { BaseCategoryDto, CreateBaseCategoryDto } from './base-category.dto';
+import { CategoryTypeEnum } from '../enums/category-type.enum';
 
 export class SubcategoryDto extends BaseCategoryDto {
   @ApiProperty({ writeOnly: true })
@@ -11,8 +12,11 @@ export class SubcategoryDto extends BaseCategoryDto {
   }
 }
 
-export class CreateSubcategoryDto extends IntersectionType(OmitType(SubcategoryDto, ['id'] as const), CreateBaseCategoryDto) {
+export class CreateSubcategoryDto
+  extends IntersectionType(OmitType(SubcategoryDto, ['id'] as const), OmitType(CreateBaseCategoryDto, ['type'] as const)) {
+  @ApiHideProperty()
+  type: CategoryTypeEnum.SUBCATEGORY;
 }
 
-export class UpdateSubcategoryDto extends IntersectionType(SubcategoryDto, UpdateBaseCategoryDto) {
+export class UpdateSubcategoryDto extends IntersectionType(SubcategoryDto, CreateSubcategoryDto) {
 }
