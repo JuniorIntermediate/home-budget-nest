@@ -148,4 +148,28 @@ export class CategoryRepository {
       },
     });
   }
+
+  async findCategoryByUniqueFieldWithSubcategory(id: number, subcategoryId?: number) {
+    if (subcategoryId) {
+      return this.prisma.category.findFirst({
+        where: {
+          id,
+          isDeleted: false,
+          subCategories: {
+            some: {
+              id: {
+                equals: subcategoryId,
+              },
+            },
+          },
+        },
+      });
+    }
+    return this.prisma.category.findFirst({
+      where: {
+        id,
+        isDeleted: false,
+      },
+    });
+  }
 }
