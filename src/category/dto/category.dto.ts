@@ -1,31 +1,14 @@
-import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
+import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
 import { Category } from '@prisma/client';
-import { SubCategoryDto } from './sub-category.dto';
+import { SubcategoryDto } from './subcategory.dto';
+import { BaseCategoryDto } from './base-category.dto';
 
-export class CategoryDto {
-  @ApiProperty()
-  id: number;
-
-  @ApiProperty()
-  name: string;
-
-  @ApiProperty()
-  icon: string;
-
-  @ApiProperty({ type: [SubCategoryDto] })
-  subCategories?: SubCategoryDto[];
+@ApiExtraModels(BaseCategoryDto)
+export class CategoryDto extends BaseCategoryDto {
+  @ApiProperty({ type: [SubcategoryDto], required: false, readOnly: true })
+  subCategories?: SubcategoryDto[];
 
   constructor(input?: Partial<Category>) {
-    this.id = input.id;
-    this.name = input.name;
-    this.icon = input.icon;
+    super(input);
   }
-}
-
-export class CreateCategoryDto extends OmitType(CategoryDto, ['id', 'subCategories'] as const) {
-  @ApiHideProperty()
-  email: string;
-}
-
-export class UpdateCategoryDto extends IntersectionType(OmitType(CategoryDto, ['subCategories'] as const), CreateCategoryDto) {
 }

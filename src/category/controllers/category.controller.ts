@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -9,52 +10,120 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guards/jwt.guard';
 import { CategoryService } from '../service/category.service';
-import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+  getSchemaPath,
+} from '@nestjs/swagger';
 import { RequestUserModel } from '../../core/models/request-user.model';
-import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../dto';
+import { CategoryDto } from '../dto';
+import { CategoryTypeEnum } from '../enums/category-type.enum';
+import { BaseCategoryDto, CreateBaseCategoryDto, UpdateBaseCategoryDto } from '../dto/base-category.dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 @ApiTags('category')
-@Controller('category')
+@Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {
   }
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  @ApiOkResponse({ description: 'Return list of categories', isArray: true, type: CategoryDto })
-  async getCategories(@Req() req: RequestUserModel): Promise<CategoryDto[]> {
-    return this.categoryService.getCategories(req.user.email);
+  @ApiOperation({ summary: 'Get categories of proper type (if provided)' })
+  @ApiQuery({
+    name: 'type',
+    enum: [CategoryTypeEnum.INCOME, CategoryTypeEnum.OUTCOME],
+    required: false,
+    description: 'Get specific category type.',
+  })
+  @ApiOkResponse({
+    description: 'Return list of categories',
+    isArray: true,
+    schema: {
+      oneOf: [
+        {
+          $ref: getSchemaPath(BaseCategoryDto),
+        },
+        {
+          $ref: getSchemaPath(CategoryDto),
+        },
+      ],
+    },
+  })
+  async getCategories(
+    @Query('type') type: CategoryTypeEnum,
+    @Req() req: RequestUserModel,
+  ): Promise<BaseCategoryDto[]> {
+    return this.categoryService.getProperCategories(req.user.email, type);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  @ApiCreatedResponse({ description: 'The category has been successfully created.' })
+  @ApiQuery({
+    name: 'type',
+    enum: [CategoryTypeEnum.INCOME, CategoryTypeEnum.OUTCOME],
+    required: false,
+    description: 'Update specific category type.',
+  })
+  @ApiOperation({ summary: 'Create category of proper type (if provided)' })
+  @ApiCreatedResponse({ description: 'The category has been successfully created.', type: CategoryDto })
   async postCategory(
+    @Query('type') type: CategoryTypeEnum,
     @Req() req: RequestUserModel,
-    @Body() categoryDto: CreateCategoryDto) {
-    await this.categoryService.createCategory({ ...categoryDto, email: req.user.email });
+    @Body() categoryDto: CreateBaseCategoryDto): Promise<BaseCategoryDto> {
+    return this.categoryService.createProperCategory({ ...categoryDto, email: req.user.email }, type);
   }
 
   @HttpCode(HttpStatus.OK)
-  @Put()
-  @ApiOkResponse({ description: 'The category has been successfully updated.' })
+  @Put(':id')
+  @ApiOperation({ summary: 'Update category of proper type (if provided)' })
+  @ApiQuery({
+    name: 'type',
+    enum: [CategoryTypeEnum.INCOME, CategoryTypeEnum.OUTCOME],
+    required: false,
+    description: 'Update specific category type.',
+  })
+  @ApiOkResponse({ description: 'The category has been successfully updated.', type: CategoryDto })
+  @ApiBadRequestResponse({ description: 'Id provided in body are not equal to params.' })
   async updateCategory(
+    @Query('type') type: CategoryTypeEnum,
+    @Param('id', ParseIntPipe) id: number,
     @Req() req: RequestUserModel,
-    @Body() categoryDto: UpdateCategoryDto): Promise<void> {
-    await this.categoryService.updateCategory({ ...categoryDto, email: req.user.email });
+    @Body() categoryDto: UpdateBaseCategoryDto): Promise<BaseCategoryDto> {
+    if (id !== categoryDto.id) {
+      throw new BadRequestException('Id\'s are not equal!');
+    }
+    return this.categoryService.updateProperCategory({ ...categoryDto, email: req.user.email }, type);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete category of proper type (if provided)' })
+  @ApiQuery({
+    name: 'type',
+    enum: [CategoryTypeEnum.INCOME, CategoryTypeEnum.OUTCOME],
+    required: false,
+    description: 'Delete specific category type.',
+  })
   @ApiNoContentResponse({ description: 'The category has been successfully removed.' })
-  async deleteCategory(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    await this.categoryService.deleteCategory(id);
+  async deleteCategory(
+    @Query('type') type: CategoryTypeEnum,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<void> {
+    await this.categoryService.deleteProperCategory(id, type);
   }
+
 }

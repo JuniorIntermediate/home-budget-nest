@@ -15,7 +15,7 @@ export class PayerService {
   ) {
   }
 
-  async createPayer(payerDto: CreatePayerDto): Promise<void> {
+  async createPayer(payerDto: CreatePayerDto): Promise<PayerDto> {
     const payer = await this.payerRepository.getPayerByUniqueField({ name: payerDto.name });
     const user = await this.userRepository.findUserByUniqueField({ email: payerDto.email });
     if (!user) {
@@ -32,10 +32,11 @@ export class PayerService {
         },
       },
     };
-    await this.payerRepository.createPayer(data);
+    const createdPayer = await this.payerRepository.createPayer(data);
+    return this.mapper.mapToDto(createdPayer, PayerDto);
   }
 
-  async updatePayer(payerDto: UpdatePayerDto): Promise<void> {
+  async updatePayer(payerDto: UpdatePayerDto): Promise<PayerDto> {
     const payer = await this.payerRepository.getPayerByUniqueField({ name: payerDto.name });
     const user = await this.userRepository.findUserByUniqueField({ email: payerDto.email });
     if (!user) {
@@ -52,7 +53,8 @@ export class PayerService {
         id: payerDto.id,
       },
     };
-    await this.payerRepository.updatePayer(params);
+    const updatedPayer = await this.payerRepository.updatePayer(params);
+    return this.mapper.mapToDto(updatedPayer, PayerDto);
   }
 
   async deletePayer(id: number): Promise<void> {

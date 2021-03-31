@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -13,6 +14,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiNoContentResponse,
@@ -28,7 +30,7 @@ import { CreateCurrencyDto, CurrencyDto, UpdateCurrencyDto } from '../dto/curren
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 @ApiTags('currency')
-@Controller('currency')
+@Controller('currencies')
 export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {
   }
@@ -43,22 +45,27 @@ export class CurrencyController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  @ApiCreatedResponse({ description: 'The currency has been successfully created.' })
+  @ApiCreatedResponse({ description: 'The currency has been successfully created.', type: CurrencyDto })
   @ApiOperation({ summary: 'Create custom currency for user purpose' })
   async postCurrency(
     @Req() req: RequestUserModel,
-    @Body() currencyDto: CreateCurrencyDto) {
-    await this.currencyService.createCurrency({ ...currencyDto, email: req.user.email });
+    @Body() currencyDto: CreateCurrencyDto): Promise<CurrencyDto> {
+    return this.currencyService.createCurrency({ ...currencyDto, email: req.user.email });
   }
 
   @HttpCode(HttpStatus.OK)
-  @Put()
-  @ApiOkResponse({ description: 'The currency has been successfully updated.' })
+  @Put(':id')
+  @ApiOkResponse({ description: 'The currency has been successfully updated.', type: CurrencyDto })
   @ApiOperation({ summary: 'Update custom currency' })
+  @ApiBadRequestResponse({ description: 'Id provided in body are not equal to params.' })
   async updateCurrency(
+    @Param('id', ParseIntPipe) id: number,
     @Req() req: RequestUserModel,
-    @Body() currencyDto: UpdateCurrencyDto): Promise<void> {
-    await this.currencyService.updateCurrency({ ...currencyDto, email: req.user.email });
+    @Body() currencyDto: UpdateCurrencyDto): Promise<CurrencyDto> {
+    if (id !== currencyDto.id) {
+      throw new BadRequestException('Id\'s are not equal!');
+    }
+    return this.currencyService.updateCurrency({ ...currencyDto, email: req.user.email });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

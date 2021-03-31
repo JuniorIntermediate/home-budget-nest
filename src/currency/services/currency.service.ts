@@ -44,7 +44,7 @@ export class CurrencyService {
     return currencies.sort((a, b) => a.code.localeCompare(b.code));
   }
 
-  async createCurrency(currencyDto: CreateCurrencyDto): Promise<void> {
+  async createCurrency(currencyDto: CreateCurrencyDto): Promise<CurrencyDto> {
     const currency = await this.currencyRepository.getCurrencyByUniqueField({ code: currencyDto.code });
     const user = await this.userRepository.findUserByUniqueField({ email: currencyDto.email });
     if (!user) {
@@ -62,10 +62,11 @@ export class CurrencyService {
         },
       },
     };
-    await this.currencyRepository.createCurrency(data);
+    const createdCurrency = await this.currencyRepository.createCurrency(data);
+    return new CurrencyDto(createdCurrency);
   }
 
-  async updateCurrency(currencyDto: UpdateCurrencyDto): Promise<void> {
+  async updateCurrency(currencyDto: UpdateCurrencyDto): Promise<CurrencyDto> {
     const currency = await this.currencyRepository.getCurrencyByUniqueField({ code: currencyDto.code });
     const user = await this.userRepository.findUserByUniqueField({ email: currencyDto.email });
     if (!user) {
@@ -83,7 +84,8 @@ export class CurrencyService {
         id: currencyDto.id,
       },
     };
-    await this.currencyRepository.updateCurrency(params);
+    const updatedCurrency = await this.currencyRepository.updateCurrency(params);
+    return new CurrencyDto(updatedCurrency);
   }
 
   async deleteCurrency(id: number): Promise<void> {

@@ -3,7 +3,7 @@ import { Category, Prisma, SubCategory } from '@prisma/client';
 export type IncomeCategoryCreateParams = Prisma.IncomeCategoryCreateInput
 export type OutcomeCategoryCreateParams = Prisma.OutcomeCategoryCreateInput
 export type CategoryCreateParams = Prisma.CategoryCreateInput
-export type SubCategoryCreateParams = Prisma.SubCategoryCreateInput
+export type SubcategoryCreateParams = Prisma.SubCategoryCreateInput
 
 export type IncomeCategoryUpdateParams = {
   where: Prisma.IncomeCategoryWhereUniqueInput,
@@ -20,7 +20,7 @@ export type CategoryUpdateParams = {
   data: Prisma.CategoryUpdateInput
 }
 
-export type SubCategoryUpdateParams = {
+export type SubcategoryUpdateParams = {
   where: Prisma.SubCategoryWhereUniqueInput,
   data: Prisma.SubCategoryUpdateInput
 }
@@ -50,4 +50,4 @@ export type CategoryGetParams = {
 export type IncomeCategoryGetByUniqueFieldParams = Prisma.IncomeCategoryWhereUniqueInput
 export type OutcomeCategoryGetByUniqueFieldParams = Prisma.OutcomeCategoryWhereUniqueInput
 export type CategoryGetByUniqueFieldParams = Prisma.CategoryWhereUniqueInput
-export type SubCategoryGetByUniqueFieldParams = Prisma.SubCategoryWhereUniqueInput
+export type SubcategoryGetByUniqueFieldParams = Prisma.SubCategoryWhereUniqueInput
