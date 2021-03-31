@@ -16,7 +16,7 @@ export class CurrencyDto {
     if ((input as Currency).id) {
       this.id = input.id;
       this.code = input.code;
-      this.exchangeRate = input.exchangeRate;
+      this.exchangeRate = Number(input.exchangeRate);
     } else {
       this.code = input.code;
       this.exchangeRate = input.mid;

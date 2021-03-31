@@ -8,12 +8,14 @@ import { SendGridModule } from '@ntegral/nestjs-sendgrid';
 import { PayerRepository } from './repositories/payer.repository';
 import { Mapper } from './factories/mapper';
 import { CurrencyRepository } from './repositories/currency.repository';
+import { BudgetRepository } from './repositories/budget.repository';
 
 const repositories = [
   UserRepository,
   PayerRepository,
   CurrencyRepository,
   CategoryRepository,
+  BudgetRepository
 ];
 
 const importMailerModuleProvider = IS_SMTP_PROVIDER ? MailerModule.forRoot({

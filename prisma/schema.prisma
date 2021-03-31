@@ -12,10 +12,10 @@ generator client {
 
 model Budget {
   id               Int               @id @default(autoincrement())
-  value            Decimal           @db.Money
-  currentValue     Decimal           @db.Money
+  value            Decimal           @db.Decimal(12, 2)
+  currentValue     Decimal           @db.Decimal(12, 2)
   name             String            @db.VarChar(255)
-  isDeleted         Boolean          @default(false)
+  isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
   expense          Expense?
@@ -23,19 +23,19 @@ model Budget {
 }
 
 model IncomeCategory {
-  id     Int    @id @default(autoincrement())
-  name   String @unique @db.VarChar(255)
-  icon   String @db.VarChar(100)
-  isDeleted         Boolean           @default(false)
-  user   User   @relation(fields: [userId], references: [id])
-  userId Int
+  id               Int               @id @default(autoincrement())
+  name             String            @unique @db.VarChar(255)
+  icon             String            @db.VarChar(100)
+  isDeleted        Boolean           @default(false)
+  user             User              @relation(fields: [userId], references: [id])
+  userId           Int
 }
 
 model OutcomeCategory {
   id               Int               @id @default(autoincrement())
   name             String            @unique @db.VarChar(255)
   icon             String            @db.VarChar(100)
-  isDeleted         Boolean          @default(false)
+  isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
   expense          Expense?
@@ -43,30 +43,30 @@ model OutcomeCategory {
 }
 
 model Category {
-  id                Int               @id @default(autoincrement())
-  name              String            @unique @db.VarChar(255)
-  icon              String            @db.VarChar(100)
-  isDeleted         Boolean           @default(false)
-  user              User              @relation(fields: [userId], references: [id])
-  userId            Int
-  expense           Expense?
-  recurringExpense  RecurringExpense?
-  subCategories     SubCategory[]
+  id               Int               @id @default(autoincrement())
+  name             String            @unique @db.VarChar(255)
+  icon             String            @db.VarChar(100)
+  isDeleted        Boolean           @default(false)
+  user             User              @relation(fields: [userId], references: [id])
+  userId           Int
+  expense          Expense?
+  recurringExpense RecurringExpense?
+  subCategories    SubCategory[]
 }
 
 model SubCategory {
-  id                Int               @id @default(autoincrement())
-  name              String            @unique @db.VarChar(255)
-  icon              String            @db.VarChar(100)
-  isDeleted         Boolean           @default(false)
-  category          Category          @relation(fields: [categoryId], references: [id])
-  categoryId        Int
+  id               Int               @id @default(autoincrement())
+  name             String            @unique @db.VarChar(255)
+  icon             String            @db.VarChar(100)
+  isDeleted        Boolean           @default(false)
+  category         Category          @relation(fields: [categoryId], references: [id])
+  categoryId       Int
 }
 
 model Currency {
   id               Int               @id @default(autoincrement())
   code             String            @unique @db.VarChar(3)
-  exchangeRate     Float             @db.DoublePrecision
+  exchangeRate     Decimal           @db.Decimal(8, 4)
   isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
@@ -75,20 +75,20 @@ model Currency {
 }
 
 model Expense {
-  id                Int             @id @default(autoincrement())
-  date              DateTime        @db.Date
-  note              String          @db.VarChar(255)
-  amount            Decimal         @db.Money
-  isDeleted         Boolean           @default(false)
-  payer             Payer           @relation(fields: [payerId], references: [id])
-  payerId           Int
-  currency          Currency        @relation(fields: [currencyId], references: [id])
-  currencyId        Int
-  payFrom           Budget          @relation(fields: [budgetId], references: [id])
-  budgetId          Int
-  category          Category        @relation(fields: [categoryId], references: [id])
-  categoryId        Int
-  outcomeCategory   OutcomeCategory @relation(fields: [outcomeCategoryId], references: [id])
+  id               Int             @id @default(autoincrement())
+  date             DateTime        @db.Date
+  note             String          @db.VarChar(255)
+  amount           Decimal         @db.Decimal(12, 2)
+  isDeleted        Boolean         @default(false)
+  payer            Payer           @relation(fields: [payerId], references: [id])
+  payerId          Int
+  currency         Currency        @relation(fields: [currencyId], references: [id])
+  currencyId       Int
+  payFrom          Budget          @relation(fields: [budgetId], references: [id])
+  budgetId         Int
+  category         Category        @relation(fields: [categoryId], references: [id])
+  categoryId       Int
+  outcomeCategory  OutcomeCategory @relation(fields: [outcomeCategoryId], references: [id])
   outcomeCategoryId Int
 }
 
@@ -96,7 +96,7 @@ model RecurringExpense {
   id                Int             @id @default(autoincrement())
   date              DateTime        @db.Date
   note              String          @db.VarChar(255)
-  amount            Decimal         @db.Money
+  amount            Decimal         @db.Decimal(12, 2)
   dayOfPayment      DateTime        @db.Date
   activationDate    DateTime        @db.Date
   isDeleted         Boolean         @default(false)
