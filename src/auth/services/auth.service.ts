@@ -31,7 +31,7 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto): Promise<TokenResponse> {
-    const user = await this.userRepository.findUserByEmail({ email: loginDto.email });
+    const user = await this.userRepository.findUserByUniqueField({ email: loginDto.email });
     if (user && user.activationStatus === ActivationStatus.ACTIVE) {
       const isValidPassword = await this.validatePassword(loginDto.password, user);
       if (isValidPassword) {
@@ -42,7 +42,7 @@ export class AuthService {
   }
 
   async register({ email, firstName, lastName, password }: RegisterDto): Promise<void> {
-    const user = await this.userRepository.findUserByEmail({ email: email });
+    const user = await this.userRepository.findUserByUniqueField({ email: email });
     if (user) {
       throw new BadRequestException('User already exist!');
     }
@@ -100,7 +100,7 @@ export class AuthService {
   }
 
   async sendEmailForgotPassword(email: string) {
-    const user = await this.userRepository.findUserByEmail({ email });
+    const user = await this.userRepository.findUserByUniqueField({ email });
     if (user) {
       const verificationToken = await this.createEmailToken(email, user.passwordSalt);
       try {
@@ -120,7 +120,7 @@ export class AuthService {
   }
 
   async findByPayload(jwtPayload: JwtPayload): Promise<User> {
-    return this.userRepository.findUserByEmail({ email: jwtPayload.email });
+    return this.userRepository.findUserByUniqueField({ email: jwtPayload.email });
   }
 
   private validatePassword = async (password: string, { passwordHash, passwordSalt }: User): Promise<boolean> => {

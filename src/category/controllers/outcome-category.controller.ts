@@ -13,10 +13,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guard/jwt.guard';
-import { CategoryService } from '../services/category.service';
+import { CategoryService } from '../service/category.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RequestUserModel } from '../../core/models/request-user.model';
-import { CreateOutcomeCategoryDto, OutcomeCategoryDto, UpdateOutcomeCategoryDto } from '../dto/outcome-category.dto';
+import { CreateOutcomeCategoryDto, OutcomeCategoryDto, UpdateOutcomeCategoryDto } from '../dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtGuard)

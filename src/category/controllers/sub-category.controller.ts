@@ -11,9 +11,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guard/jwt.guard';
-import { CategoryService } from '../services/category.service';
+import { CategoryService } from '../service/category.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CreateSubCategoryDto, UpdateSubCategoryDto } from '../dto/sub-category.dto';
+import { CreateSubCategoryDto, UpdateSubCategoryDto } from '../dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtGuard)

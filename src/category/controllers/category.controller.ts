@@ -13,10 +13,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtGuard } from '../../auth/guard/jwt.guard';
-import { CategoryService } from '../services/category.service';
+import { CategoryService } from '../service/category.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RequestUserModel } from '../../core/models/request-user.model';
-import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../dto/category.dto';
+import { CategoryDto, CreateCategoryDto, UpdateCategoryDto } from '../dto';
 
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
@@ -53,7 +53,7 @@ export class CategoryController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  @ApiNoContentResponse({ description: 'The outcome category has been successfully removed.' })
+  @ApiNoContentResponse({ description: 'The category has been successfully removed.' })
   async deleteCategory(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.categoryService.deleteCategory(id);
   }

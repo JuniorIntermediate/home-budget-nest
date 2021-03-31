@@ -13,9 +13,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtPayload } from '../../auth/dto/jwt.payload';
-import { CreateIncomeCategoryDto, IncomeCategoryDto, UpdateIncomeCategoryDto } from '../dto/income-category.dto';
+import { CreateIncomeCategoryDto, IncomeCategoryDto, UpdateIncomeCategoryDto } from '../dto';
 import { JwtGuard } from '../../auth/guard/jwt.guard';
-import { CategoryService } from '../services/category.service';
+import { CategoryService } from '../service/category.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { RequestUserModel } from '../../core/models/request-user.model';
 
