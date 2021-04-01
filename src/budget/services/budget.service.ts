@@ -60,8 +60,7 @@ export class BudgetService {
     const params: BudgetUpdateParams = {
       data: {
         name: updateBudgetDto.name,
-        value: updateBudgetDto.value,
-        currentValue: updateBudgetDto.value,
+        value: updateBudgetDto.value
       },
       where: {
         id: updateBudgetDto.id,

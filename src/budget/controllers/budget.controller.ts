@@ -61,7 +61,7 @@ export class BudgetController {
 
   @HttpCode(HttpStatus.OK)
   @Put(':id')
-  @ApiOperation({ summary: 'Update budget only once per month. (It reset current value)' })
+  @ApiOperation({ summary: 'Update budget' })
   @ApiOkResponse({ description: 'The budget has been successfully updated.', type: BudgetDto })
   @ApiBadRequestResponse({ description: 'Id provided in body are not equal to params.' })
   update(
