@@ -10,7 +10,7 @@ export class CreateExpenseValidatorPipe implements PipeTransform {
   constructor(
     private readonly budgetRepository: BudgetRepository,
     private readonly payerRepository: PayerRepository,
-    private readonly categoryRepository: CategoryRepository
+    private readonly categoryRepository: CategoryRepository,
   ) {
   }
 
@@ -27,6 +27,9 @@ export class CreateExpenseValidatorPipe implements PipeTransform {
       .findCategoryByUniqueFieldWithSubcategory(value.categoryId, value.subcategoryId);
     if (!category) {
       throw new BadRequestException('Category doesn\'t exist!');
+    }
+    if (!(value.incomeCategoryId ^ value.outcomeCategoryId)) {
+      throw new BadRequestException('One of income/outcome category id must be provided!');
     }
     if (value.incomeCategoryId) {
       const incomeCategory = await this.categoryRepository.findIncomeCategoryByUniqueField({ id: value.incomeCategoryId });

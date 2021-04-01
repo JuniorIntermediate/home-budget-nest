@@ -55,7 +55,6 @@ export class BudgetController {
     @Req() req: RequestUserModel,
     @Body() createBudgetDto: CreateBudgetDto,
   ): Promise<BudgetDto> {
-    console.log('x');
     return this.budgetService.createBudget({ ...createBudgetDto, email: req.user.email });
   }
 
