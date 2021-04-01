@@ -1,6 +1,8 @@
-import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
+import { ApiHideProperty, ApiProperty, OmitType, PickType } from '@nestjs/swagger';
 import { Expense } from '@prisma/client';
 import { CurrencyDto } from '../../currency/dto/currency.dto';
+import { Transform, Type } from 'class-transformer';
+import { DateTime } from 'luxon';
 
 export class ExpenseDto {
   @ApiProperty()
@@ -27,13 +29,13 @@ export class ExpenseDto {
   @ApiProperty()
   categoryId: number;
 
-  @ApiProperty({ required: false, description: 'Pass value only if you want specify category.' })
+  @ApiProperty({ required: false })
   subcategoryId: number;
 
-  @ApiProperty({ required: false, description: 'Income/Outcome id should be provided (only one of them)' })
+  @ApiProperty({ required: false })
   incomeCategoryId: number;
 
-  @ApiProperty({ required: false, description: 'Income/Outcome id should be provided (only one of them)' })
+  @ApiProperty({ required: false })
   outcomeCategoryId: number;
 
   constructor(input: Partial<Expense>) {
@@ -53,7 +55,45 @@ export class ExpenseDto {
 export class CreateExpenseDto extends OmitType(ExpenseDto, ['id'] as const) {
   @ApiHideProperty()
   email: string;
+  @ApiProperty({ required: false, description: 'Pass value only if you want specify category.' })
+  subcategoryId: number;
+
+  @ApiProperty({ required: false, description: 'Income/Outcome id should be provided (only one of them)' })
+  incomeCategoryId: number;
+
+  @ApiProperty({ required: false, description: 'Income/Outcome id should be provided (only one of them)' })
+  outcomeCategoryId: number;
+
+  @ApiHideProperty()
+  budgetCurrentValue: number;
 }
 
-export class UpdateExpenseDto extends IntersectionType(ExpenseDto, CreateExpenseDto) {
+export class GroupExpenseDto extends PickType(ExpenseDto,
+  ['budgetId', 'amount', 'categoryId', 'incomeCategoryId', 'outcomeCategoryId', 'payerId', 'subcategoryId']) {
+  @ApiProperty({ description: 'Month as number' })
+  month: number;
+}
+
+export class ExpensePaginationDto {
+  @ApiProperty({ type: ExpenseDto })
+  items: ExpenseDto[];
+
+  @ApiProperty()
+  total: number;
+}
+
+export class GroupExpenseQueryDto {
+  @ApiProperty({ type: DateTime, example: '2021-04-01T00:00:00.000Z', required: false })
+  @Type(() => DateTime)
+  @Transform(({ value }) => (value ? DateTime.fromISO(value) : null), {
+    toClassOnly: true,
+  })
+  dateFrom: DateTime;
+
+  @ApiProperty({ type: DateTime, example: '2021-04-01T00:00:00.000Z', required: false })
+  @Type(() => DateTime)
+  @Transform(({ value }) => (value ? DateTime.fromISO(value) : null), {
+    toClassOnly: true,
+  })
+  dateTo: DateTime;
 }

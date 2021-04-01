@@ -1,58 +1,33 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateExpenseDto, ExpenseDto } from '../dto/expense.dto';
-import { UserRepository } from '../../core/repositories/user.repository';
+import { Injectable } from '@nestjs/common';
+import {
+  CreateExpenseDto,
+  ExpenseDto,
+  ExpensePaginationDto,
+  GroupExpenseDto,
+  GroupExpenseQueryDto,
+} from '../dto/expense.dto';
 import { ExpenseRepository } from '../../core/repositories/expense.repository';
-import { ExpenseCreateParams } from '../../core/schema-types/expense.params';
+import { ExpenseCreateParams, ExpenseGetParams } from '../../core/schema-types/expense.params';
 import { Mapper } from '../../core/factories/mapper';
 import { CurrencyRepository } from '../../core/repositories/currency.repository';
 import { BudgetRepository } from '../../core/repositories/budget.repository';
-import { PayerRepository } from '../../core/repositories/payer.repository';
-import { CategoryRepository } from '../../core/repositories/category.repository';
 import { BudgetUpdateParams } from '../../core/schema-types/budget.params';
+import { QueryParamsDto } from '../dto/query-params.dto';
+import { CurrencyDto } from '../../currency/dto/currency.dto';
+import { FilterBuilder } from './filter.builder';
 
 @Injectable()
 export class ExpenseService {
   constructor(
-    private readonly userRepository: UserRepository,
     private readonly expenseRepository: ExpenseRepository,
-    private readonly mapper: Mapper,
     private readonly currencyRepository: CurrencyRepository,
     private readonly budgetRepository: BudgetRepository,
-    private readonly payerRepository: PayerRepository,
-    private readonly categoryRepository: CategoryRepository,
+    private readonly mapper: Mapper,
+    private readonly filterBuilder: FilterBuilder,
   ) {
   }
 
   async createExpense(createExpenseDto: CreateExpenseDto): Promise<ExpenseDto> {
-    const user = await this.userRepository.findUserByUniqueField({ email: createExpenseDto.email });
-    if (!user) {
-      throw new BadRequestException('User doesn\'t exist!');
-    }
-    const budget = await this.budgetRepository.getBudgetByUniqueField({ id: createExpenseDto.budgetId });
-    if (!budget) {
-      throw new BadRequestException('Budget doesn\'t exist!');
-    }
-    const payer = await this.payerRepository.getPayerByUniqueField({ id: createExpenseDto.payerId });
-    if (!payer) {
-      throw new BadRequestException('Payer doesn\'t exist!');
-    }
-    const category = await this.categoryRepository
-      .findCategoryByUniqueFieldWithSubcategory(createExpenseDto.categoryId, createExpenseDto.subcategoryId);
-    if (!category) {
-      throw new BadRequestException('Category doesn\'t exist!');
-    }
-    if (createExpenseDto.incomeCategoryId) {
-      const incomeCategory = await this.categoryRepository.findIncomeCategoryByUniqueField({ id: createExpenseDto.incomeCategoryId });
-      if (!incomeCategory) {
-        throw new BadRequestException('Income category doesn\'t exist!');
-      }
-    }
-    if (createExpenseDto.outcomeCategoryId) {
-      const outcomeCategory = await this.categoryRepository.findOutcomeCategoryByUniqueField({ id: createExpenseDto.outcomeCategoryId });
-      if (!outcomeCategory) {
-        throw new BadRequestException('Outcome category doesn\'t exist!');
-      }
-    }
     const currency = await this.currencyRepository.getCurrencyByUniqueField({ code: createExpenseDto.currency.code });
     if (currency && currency.isDeleted) {
       await this.currencyRepository.updateCurrency({
@@ -62,7 +37,7 @@ export class ExpenseService {
     }
     const budgetUpdateData: BudgetUpdateParams = {
       data: {
-        currentValue: Number(budget.currentValue) + createExpenseDto.amount,
+        currentValue: createExpenseDto.budgetCurrentValue + createExpenseDto.amount,
       },
       where: {
         id: createExpenseDto.budgetId,
@@ -70,8 +45,19 @@ export class ExpenseService {
     };
     let data: ExpenseCreateParams = {
       currency: {
-        connect: {
-          code: createExpenseDto.currency.code,
+        connectOrCreate: {
+          where: {
+            code: createExpenseDto.currency.code,
+          },
+          create: {
+            code: createExpenseDto.currency.code,
+            exchangeRate: createExpenseDto.currency.exchangeRate,
+            user: {
+              connect: {
+                email: createExpenseDto.email,
+              },
+            },
+          },
         },
       },
       category: {
@@ -125,5 +111,37 @@ export class ExpenseService {
     await this.budgetRepository.updateBudget(budgetUpdateData);
     const createdExpense = await this.expenseRepository.createExpense(data);
     return this.mapper.mapToDto(createdExpense, ExpenseDto);
+  }
+
+  async getExpensesGroupedByMonth(query: GroupExpenseQueryDto): Promise<GroupExpenseDto[]> {
+    return this.expenseRepository.aggregateExpensesByMonth(query?.dateFrom, query?.dateTo);
+  }
+
+  async getExpenses(query?: QueryParamsDto): Promise<ExpensePaginationDto> {
+    if (!query) {
+      const expenses = await this.expenseRepository.getExpenses();
+      const items = expenses.map(expense => ({
+        ...this.mapper.mapToDto(expense, ExpenseDto),
+        currency: this.mapper.mapToDto(expense.currency, CurrencyDto),
+      }));
+      return {
+        items,
+        total: items.length,
+      };
+    }
+    const queryBuilder: ExpenseGetParams = this.filterBuilder
+      .withLimit(query)
+      .withFilters(query)
+      .withOrder(query)
+      .build();
+    const expenses = await this.expenseRepository.getExpenses(queryBuilder);
+    const items = expenses.map(expense => ({
+      ...this.mapper.mapToDto(expense, ExpenseDto),
+      currency: this.mapper.mapToDto(expense.currency, CurrencyDto),
+    }));
+    return {
+      items,
+      total: items.length,
+    };
   }
 }

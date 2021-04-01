@@ -24,16 +24,11 @@ import {
 import { Mapper } from '../../core/factories/mapper';
 import { CategoryTypeEnum } from '../enums/category-type.enum';
 import { BaseCategoryDto, CreateBaseCategoryDto, UpdateBaseCategoryDto } from '../dto/base-category.dto';
-
-type CategoryByTypeReturnListFunction = {
-  [index in CategoryTypeEnum]?: (email: string) => Promise<BaseCategoryDto[]>
-}
-type CategoryByTypeReturnFunction = {
-  [index in CategoryTypeEnum]?: (input: CreateBaseCategoryDto | UpdateBaseCategoryDto) => Promise<BaseCategoryDto>
-}
-type CategoryByTypeNoReturnFunction = {
-  [index in CategoryTypeEnum]?: (id: number) => Promise<void>
-}
+import {
+  CategoryByTypeNoReturnFunction,
+  CategoryByTypeReturnFunction,
+  CategoryByTypeReturnListFunction,
+} from '../types/category.types';
 
 @Injectable()
 export class CategoryService {
