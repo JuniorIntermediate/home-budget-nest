@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -50,17 +51,27 @@ export class BudgetController {
   @Post()
   @ApiOperation({ summary: 'Create budget' })
   @ApiCreatedResponse({ description: 'The budget has been successfully created.', type: BudgetDto })
-  create(@Body() createBudgetDto: CreateBudgetDto): Promise<BudgetDto> {
-    return this.budgetService.createBudget(createBudgetDto);
+  create(
+    @Req() req: RequestUserModel,
+    @Body() createBudgetDto: CreateBudgetDto,
+  ): Promise<BudgetDto> {
+    return this.budgetService.createBudget({ ...createBudgetDto, email: req.user.email });
   }
 
   @HttpCode(HttpStatus.OK)
   @Put(':id')
-  @ApiOperation({ summary: 'Update budget only once per month. (It reset current value)' })
+  @ApiOperation({ summary: 'Update budget' })
   @ApiOkResponse({ description: 'The budget has been successfully updated.', type: BudgetDto })
   @ApiBadRequestResponse({ description: 'Id provided in body are not equal to params.' })
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateBudgetDto: UpdateBudgetDto) {
-    return this.budgetService.updateBudget(updateBudgetDto);
+  update(
+    @Req() req: RequestUserModel,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateBudgetDto: UpdateBudgetDto,
+  ) {
+    if (id !== updateBudgetDto.id) {
+      throw new BadRequestException('Id\'s are not equal!');
+    }
+    return this.budgetService.updateBudget({ ...updateBudgetDto, email: req.user.email });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

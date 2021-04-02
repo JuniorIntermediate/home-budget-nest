@@ -5,8 +5,9 @@ import { CategoryModule } from './category/category.module';
 import { PayerModule } from './payer/payer.module';
 import { CurrencyModule } from './currency/currency.module';
 import { BudgetModule } from './budget/budget.module';
+import { ExpenseModule } from './expense/expense.module';
 
 @Module({
-  imports: [CoreModule.register(), AuthModule, CategoryModule, PayerModule, CurrencyModule, BudgetModule],
+  imports: [CoreModule.register(), AuthModule, CategoryModule, PayerModule, CurrencyModule, BudgetModule, ExpenseModule],
 })
 export class AppModule {}

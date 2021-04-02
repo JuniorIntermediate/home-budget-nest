@@ -18,8 +18,8 @@ model Budget {
   isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
-  expense          Expense?
-  recurringExpense RecurringExpense?
+  expenses          Expense[]
+  recurringExpenses RecurringExpense[]
 }
 
 model IncomeCategory {
@@ -29,6 +29,8 @@ model IncomeCategory {
   isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
+  expenses          Expense[]
+  recurringExpenses RecurringExpense[]
 }
 
 model OutcomeCategory {
@@ -38,8 +40,8 @@ model OutcomeCategory {
   isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
-  expense          Expense?
-  recurringExpense RecurringExpense?
+  expenses          Expense[]
+  recurringExpenses RecurringExpense[]
 }
 
 model Category {
@@ -49,8 +51,8 @@ model Category {
   isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
-  expense          Expense?
-  recurringExpense RecurringExpense?
+  expenses          Expense[]
+  recurringExpenses RecurringExpense[]
   subCategories    SubCategory[]
 }
 
@@ -61,6 +63,8 @@ model SubCategory {
   isDeleted        Boolean           @default(false)
   category         Category          @relation(fields: [categoryId], references: [id])
   categoryId       Int
+  expenses          Expense[]
+  recurringExpenses RecurringExpense[]
 }
 
 model Currency {
@@ -70,8 +74,8 @@ model Currency {
   isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
-  expense          Expense?
-  recurringExpense RecurringExpense?
+  expenses          Expense[]
+  recurringExpenses RecurringExpense[]
 }
 
 model Expense {
@@ -88,8 +92,12 @@ model Expense {
   budgetId         Int
   category         Category        @relation(fields: [categoryId], references: [id])
   categoryId       Int
-  outcomeCategory  OutcomeCategory @relation(fields: [outcomeCategoryId], references: [id])
-  outcomeCategoryId Int
+  subcategory      SubCategory?    @relation(fields: [subcategoryId], references: [id])
+  subcategoryId    Int?
+  outcomeCategory  OutcomeCategory? @relation(fields: [outcomeCategoryId], references: [id])
+  outcomeCategoryId Int?
+  incomeCategory   IncomeCategory? @relation(fields: [incomeCategoryId], references: [id])
+  incomeCategoryId Int?
 }
 
 model RecurringExpense {
@@ -106,10 +114,14 @@ model RecurringExpense {
   currencyId        Int
   payFrom           Budget          @relation(fields: [budgetId], references: [id])
   budgetId          Int
-  category          Category        @relation(fields: [categoryId], references: [id])
-  categoryId        Int
-  outcomeCategory   OutcomeCategory @relation(fields: [outcomeCategoryId], references: [id])
-  outcomeCategoryId Int
+  category         Category        @relation(fields: [categoryId], references: [id])
+  categoryId       Int
+  subcategory      SubCategory?    @relation(fields: [subcategoryId], references: [id])
+  subcategoryId    Int?
+  outcomeCategory  OutcomeCategory? @relation(fields: [outcomeCategoryId], references: [id])
+  outcomeCategoryId Int?
+  incomeCategory   IncomeCategory? @relation(fields: [incomeCategoryId], references: [id])
+  incomeCategoryId Int?
 }
 
 model Payer {
@@ -118,8 +130,8 @@ model Payer {
   isDeleted        Boolean           @default(false)
   user             User              @relation(fields: [userId], references: [id])
   userId           Int
-  expense          Expense?
-  recurringExpense RecurringExpense?
+  expenses          Expense[]
+  recurringExpenses RecurringExpense[]
 }
 
 model User {
@@ -136,7 +148,7 @@ model User {
   outcomeCategories OutcomeCategory[]
   incomeCategories  IncomeCategory[]
   categories        Category[]
-  currency          Currency?
+  currencies        Currency[]
 }
 
 enum ActivationStatus {

@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PayerRepository } from '../../core/repositories/payer.repository';
-import { UserRepository } from '../../core/repositories/user.repository';
 import { CreatePayerDto, PayerDto, UpdatePayerDto } from '../dto/payer.dto';
 import { PayerCreateParams, PayerGetParams, PayerUpdateParams } from '../../core/schema-types/payer.params';
 import { Mapper } from '../../core/factories/mapper';
@@ -10,17 +9,12 @@ export class PayerService {
 
   constructor(
     private readonly payerRepository: PayerRepository,
-    private readonly userRepository: UserRepository,
     private mapper: Mapper,
   ) {
   }
 
   async createPayer(payerDto: CreatePayerDto): Promise<PayerDto> {
     const payer = await this.payerRepository.getPayerByUniqueField({ name: payerDto.name });
-    const user = await this.userRepository.findUserByUniqueField({ email: payerDto.email });
-    if (!user) {
-      throw new BadRequestException('User doesn\'t exist!');
-    }
     if (payer) {
       throw new BadRequestException('The name of payer must be unique!');
     }
@@ -38,10 +32,6 @@ export class PayerService {
 
   async updatePayer(payerDto: UpdatePayerDto): Promise<PayerDto> {
     const payer = await this.payerRepository.getPayerByUniqueField({ name: payerDto.name });
-    const user = await this.userRepository.findUserByUniqueField({ email: payerDto.email });
-    if (!user) {
-      throw new BadRequestException('User doesn\'t exist!');
-    }
     if (payer && payer.id !== payerDto.id) {
       throw new BadRequestException('The name of payer must be unique!');
     }

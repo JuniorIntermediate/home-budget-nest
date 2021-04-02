@@ -3,7 +3,6 @@ import { CurrencyRepository } from '../../core/repositories/currency.repository'
 import { CurrencyCreateParams, CurrencyGetParams, CurrencyUpdateParams } from '../../core/schema-types/currency.params';
 import { CreateCurrencyDto, CurrencyDto, UpdateCurrencyDto } from '../dto/currency.dto';
 import { ExternalApiService } from './external-api.service';
-import { UserRepository } from '../../core/repositories/user.repository';
 
 @Injectable()
 export class CurrencyService {
@@ -12,7 +11,6 @@ export class CurrencyService {
   (
     private readonly currencyRepository: CurrencyRepository,
     private readonly externalApiService: ExternalApiService,
-    private readonly userRepository: UserRepository,
   ) {
   }
 
@@ -46,10 +44,6 @@ export class CurrencyService {
 
   async createCurrency(currencyDto: CreateCurrencyDto): Promise<CurrencyDto> {
     const currency = await this.currencyRepository.getCurrencyByUniqueField({ code: currencyDto.code });
-    const user = await this.userRepository.findUserByUniqueField({ email: currencyDto.email });
-    if (!user) {
-      throw new BadRequestException('User doesn\'t exist!');
-    }
     if (currency) {
       throw new BadRequestException('The currency code must be unique!');
     }
@@ -68,10 +62,6 @@ export class CurrencyService {
 
   async updateCurrency(currencyDto: UpdateCurrencyDto): Promise<CurrencyDto> {
     const currency = await this.currencyRepository.getCurrencyByUniqueField({ code: currencyDto.code });
-    const user = await this.userRepository.findUserByUniqueField({ email: currencyDto.email });
-    if (!user) {
-      throw new BadRequestException('User doesn\'t exist!');
-    }
     if (currency && currency.id !== currencyDto.id) {
       throw new BadRequestException('The currency code must be unique!');
     }
