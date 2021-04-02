@@ -19,12 +19,14 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { IS_SMTP_PROVIDER, SENDGRID_EMAIL_FROM, SMTP_FROM, WEB_URL } from '../../core/models/constants';
 import { ResetPasswordDto } from '../dto/reset-password.dto';
 import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
+import { PayerRepository } from '../../core/repositories/payer.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
+    private readonly payerRepository: PayerRepository,
     @Optional() private readonly mailService: MailerService,
     @Optional() @InjectSendGrid() private readonly sendGridService: SendGridService,
   ) {
@@ -74,7 +76,16 @@ export class AuthService {
         },
         where: { email: user.email },
       };
-      await this.userRepository.updateUser(updateUser);
+      const updatedUser = await this.userRepository.updateUser(updateUser);
+      const name = `${updatedUser.firstName} ${updatedUser.lastName}`;
+      await this.payerRepository.createPayer({
+        name,
+        user: {
+          connect: {
+            email: user.email,
+          },
+        },
+      });
       return true;
     }
     throw new BadRequestException('Token doesn\'t exist or already used.');
