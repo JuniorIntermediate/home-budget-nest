@@ -9,7 +9,7 @@ import { PayerRepository } from './repositories/payer.repository';
 import { Mapper } from './factories/mapper';
 import { CurrencyRepository } from './repositories/currency.repository';
 import { BudgetRepository } from './repositories/budget.repository';
-import { ExpenseRepository } from './repositories/expense.repository';
+import { TransactionRepository } from './repositories/transaction.repository';
 
 const repositories = [
   UserRepository,
@@ -17,7 +17,7 @@ const repositories = [
   CurrencyRepository,
   CategoryRepository,
   BudgetRepository,
-  ExpenseRepository
+  TransactionRepository
 ];
 
 const importMailerModuleProvider = IS_SMTP_PROVIDER ? MailerModule.forRoot({

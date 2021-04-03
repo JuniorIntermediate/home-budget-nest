@@ -1,5 +1,5 @@
-import { IncomeCategory } from '@prisma/client';
-import { BaseCategoryDto } from './base-category.dto';
+import { IncomeCategory } from 'src/generated-prisma';
+import { BaseCategoryDto } from '@category/dto';
 
 export class IncomeCategoryDto extends BaseCategoryDto {
   constructor(input?: Partial<IncomeCategory>) {

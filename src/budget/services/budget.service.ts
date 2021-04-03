@@ -1,8 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { BudgetDto, CreateBudgetDto, UpdateBudgetDto } from '../dto/budget.dto';
-import { BudgetRepository } from '../../core/repositories/budget.repository';
-import { BudgetCreateParams, BudgetGetParams, BudgetUpdateParams } from '../../core/schema-types/budget.params';
-import { Mapper } from '../../core/factories/mapper';
+import { BudgetDto, CreateBudgetDto, UpdateBudgetDto } from '@budget/dto/budget.dto';
+import { BudgetRepository } from '@core/repositories/budget.repository';
+import { BudgetCreateParams, BudgetGetParams, BudgetUpdateParams } from '@core/schema-types/budget.params';
+import { Mapper } from '@core/factories/mapper';
+import { BudgetType } from 'src/generated-prisma';
 
 @Injectable()
 export class BudgetService {
@@ -14,11 +15,11 @@ export class BudgetService {
   }
 
 
-  async getBudgets(email: string): Promise<BudgetDto[]> {
+  async getBudgets(id: number): Promise<BudgetDto[]> {
     const params: BudgetGetParams = {
       where: {
         user: {
-          email,
+          id,
         },
         isDeleted: false,
       },
@@ -27,14 +28,21 @@ export class BudgetService {
     return budgets.map(budget => this.mapper.mapToDto(budget, BudgetDto));
   }
 
+  async getBudget(id: number): Promise<BudgetDto> {
+    const budget = await this.budgetRepository.getBudgetByUniqueField({ id });
+    return this.mapper.mapToDto(budget, BudgetDto);
+  }
+
   async createBudget(createBudgetDto: CreateBudgetDto): Promise<BudgetDto> {
     const data: BudgetCreateParams = {
       name: createBudgetDto.name,
       value: createBudgetDto.value,
       currentValue: createBudgetDto.value,
+      type: createBudgetDto.type.toUpperCase() as BudgetType,
+      validMonth: createBudgetDto.validMonth.toJSDate(),
       user: {
         connect: {
-          email: createBudgetDto.email,
+          id: createBudgetDto.userId,
         },
       },
     };
@@ -51,6 +59,7 @@ export class BudgetService {
       data: {
         name: updateBudgetDto.name,
         value: updateBudgetDto.value,
+        type: updateBudgetDto.type.toUpperCase() as BudgetType,
       },
       where: {
         id: updateBudgetDto.id,

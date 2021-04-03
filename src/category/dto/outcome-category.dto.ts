@@ -1,5 +1,5 @@
-import { OutcomeCategory } from '@prisma/client';
-import { BaseCategoryDto } from './base-category.dto';
+import { OutcomeCategory } from 'src/generated-prisma';
+import { BaseCategoryDto } from '@category/dto';
 
 export class OutcomeCategoryDto extends BaseCategoryDto {
 

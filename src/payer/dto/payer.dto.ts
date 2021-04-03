@@ -1,11 +1,15 @@
 import { ApiHideProperty, ApiProperty, IntersectionType, OmitType } from '@nestjs/swagger';
-import { Payer } from '@prisma/client';
+import { IsNumber, IsString, MaxLength } from 'class-validator';
+import { Payer } from 'src/generated-prisma';
 
 export class PayerDto {
   @ApiProperty()
+  @IsNumber()
   id: number;
 
-  @ApiProperty()
+  @ApiProperty({ maxLength: 255 })
+  @IsString()
+  @MaxLength(255)
   name: string;
 
   constructor(input: Partial<Payer>) {
@@ -16,7 +20,7 @@ export class PayerDto {
 
 export class CreatePayerDto extends OmitType(PayerDto, ['id' as const]) {
   @ApiHideProperty()
-  email: string;
+  userId: number;
 }
 
 export class UpdatePayerDto extends IntersectionType(PayerDto, CreatePayerDto) {

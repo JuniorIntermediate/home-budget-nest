@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Budget } from '@prisma/client';
+import { Budget } from 'src/generated-prisma';
+import { PrismaService } from '@core/prisma.service';
 import {
   BudgetCreateParams,
   BudgetGetByUniqueFieldParams,
   BudgetGetParams,
   BudgetUpdateParams,
-} from '../schema-types/budget.params';
+} from '@core/schema-types/budget.params';
 
 @Injectable()
 export class BudgetRepository {

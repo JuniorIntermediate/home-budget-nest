@@ -1,8 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { PayerRepository } from '../../core/repositories/payer.repository';
-import { CreatePayerDto, PayerDto, UpdatePayerDto } from '../dto/payer.dto';
-import { PayerCreateParams, PayerGetParams, PayerUpdateParams } from '../../core/schema-types/payer.params';
-import { Mapper } from '../../core/factories/mapper';
+import { Injectable } from '@nestjs/common';
+import { PayerRepository } from '@core/repositories/payer.repository';
+import { CreatePayerDto, PayerDto, UpdatePayerDto } from '@payer/dto/payer.dto';
+import { PayerCreateParams, PayerGetParams, PayerUpdateParams } from '@core/schema-types/payer.params';
+import { Mapper } from '@core/factories/mapper';
 
 @Injectable()
 export class PayerService {
@@ -14,15 +14,11 @@ export class PayerService {
   }
 
   async createPayer(payerDto: CreatePayerDto): Promise<PayerDto> {
-    const payer = await this.payerRepository.getPayerByUniqueField({ name: payerDto.name });
-    if (payer) {
-      throw new BadRequestException('The name of payer must be unique!');
-    }
     const data: PayerCreateParams = {
       name: payerDto.name,
       user: {
         connect: {
-          email: payerDto.email,
+          id: payerDto.userId,
         },
       },
     };
@@ -31,10 +27,6 @@ export class PayerService {
   }
 
   async updatePayer(payerDto: UpdatePayerDto): Promise<PayerDto> {
-    const payer = await this.payerRepository.getPayerByUniqueField({ name: payerDto.name });
-    if (payer && payer.id !== payerDto.id) {
-      throw new BadRequestException('The name of payer must be unique!');
-    }
     const params: PayerUpdateParams = {
       data: {
         name: payerDto.name,
@@ -51,16 +43,21 @@ export class PayerService {
     await this.payerRepository.deletePayer(id);
   }
 
-  async getPayers(email: string): Promise<PayerDto[]> {
+  async getPayers(id: number): Promise<PayerDto[]> {
     const params: PayerGetParams = {
       where: {
         user: {
-          email,
+          id,
         },
         isDeleted: false,
       },
     };
     const payers = await this.payerRepository.getPayers(params);
     return payers.map(payer => this.mapper.mapToDto(payer, PayerDto));
+  }
+
+  async getPayer(id: number): Promise<PayerDto> {
+    const payer = await this.payerRepository.getPayerByUniqueField({ id });
+    return this.mapper.mapToDto(payer, PayerDto);
   }
 }

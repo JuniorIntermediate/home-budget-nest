@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma } from 'src/generated-prisma';
 
 export type PayerCreateParams = Prisma.PayerCreateInput
 

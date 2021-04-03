@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Currency } from '@prisma/client';
 import {
   CurrencyCreateParams,
   CurrencyGetByUniqueFieldParams,
   CurrencyGetParams,
   CurrencyUpdateParams,
-} from '../schema-types/currency.params';
+} from '@core/schema-types/currency.params';
+import { PrismaService } from '@core/prisma.service';
+import { Currency } from 'src/generated-prisma';
 
 @Injectable()
 export class CurrencyRepository {

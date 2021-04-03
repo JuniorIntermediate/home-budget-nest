@@ -10,6 +10,29 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true
+    "incremental": true,
+    "paths": {
+      "@auth/*": [
+        "src/auth/*"
+      ],
+      "@budget/*": [
+        "src/budget/*"
+      ],
+      "@category/*": [
+        "src/category/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@currency/*": [
+        "src/currency/*"
+      ],
+      "@payer/*": [
+        "src/payer/*"
+      ],
+      "@transaction/*": [
+        "src/transaction/*"
+      ]
+    }
   }
 }

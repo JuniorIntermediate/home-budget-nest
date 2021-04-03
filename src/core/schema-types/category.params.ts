@@ -1,9 +1,9 @@
-import { Category, Prisma, SubCategory } from '@prisma/client';
+import { Category, Prisma, Subcategory } from 'src/generated-prisma';
 
 export type IncomeCategoryCreateParams = Prisma.IncomeCategoryCreateInput
 export type OutcomeCategoryCreateParams = Prisma.OutcomeCategoryCreateInput
 export type CategoryCreateParams = Prisma.CategoryCreateInput
-export type SubcategoryCreateParams = Prisma.SubCategoryCreateInput
+export type SubcategoryCreateParams = Prisma.SubcategoryCreateInput
 
 export type IncomeCategoryUpdateParams = {
   where: Prisma.IncomeCategoryWhereUniqueInput,
@@ -21,11 +21,11 @@ export type CategoryUpdateParams = {
 }
 
 export type SubcategoryUpdateParams = {
-  where: Prisma.SubCategoryWhereUniqueInput,
-  data: Prisma.SubCategoryUpdateInput
+  where: Prisma.SubcategoryWhereUniqueInput,
+  data: Prisma.SubcategoryUpdateInput
 }
 
-export type GetCategoryWithSubCategories = Category & { subCategories: SubCategory[] }
+export type GetCategoryWithSubCategories = Category & { subCategories: Subcategory[] }
 export type IncomeCategoryGetParams = {
   skip?: number,
   take?: number,
@@ -50,4 +50,4 @@ export type CategoryGetParams = {
 export type IncomeCategoryGetByUniqueFieldParams = Prisma.IncomeCategoryWhereUniqueInput
 export type OutcomeCategoryGetByUniqueFieldParams = Prisma.OutcomeCategoryWhereUniqueInput
 export type CategoryGetByUniqueFieldParams = Prisma.CategoryWhereUniqueInput
-export type SubcategoryGetByUniqueFieldParams = Prisma.SubCategoryWhereUniqueInput
+export type SubcategoryGetByUniqueFieldParams = Prisma.SubcategoryWhereUniqueInput
