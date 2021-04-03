@@ -4,6 +4,7 @@
 .env
 .env.dev
 /prisma
+/src/generated-prisma
 
 # Logs
 logs
