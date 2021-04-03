@@ -89,8 +89,10 @@ model Transaction {
   isDeleted        Boolean         @default(false)
   payer            Payer           @relation(fields: [payerId], references: [id])
   payerId          Int
-  currency         Currency        @relation(fields: [currencyId], references: [id])
-  currencyId       Int
+  currencyCode     String?          @db.VarChar(3)
+  exchangeRate     Decimal?         @db.Decimal(8, 4)
+  currency         Currency?        @relation(fields: [currencyId], references: [id])
+  currencyId       Int?
   payFrom          Budget          @relation(fields: [budgetId], references: [id])
   budgetId         Int
   category         Category        @relation(fields: [categoryId], references: [id])
@@ -113,8 +115,8 @@ model RecurringTransaction {
   isDeleted         Boolean         @default(false)
   payer             Payer           @relation(fields: [payerId], references: [id])
   payerId           Int
-  currency          Currency        @relation(fields: [currencyId], references: [id])
-  currencyId        Int
+  currency          Currency?        @relation(fields: [currencyId], references: [id])
+  currencyId        Int?
   budgets           TransactionsOnBudgets[]
   category          Category        @relation(fields: [categoryId], references: [id])
   categoryId        Int

@@ -1,7 +1,7 @@
 import { HttpService, Injectable } from '@nestjs/common';
-import { ExternalApiResponseInterface } from '../interfaces/external-currency.interface';
+import { ExternalApiResponseInterface } from '@currency/interfaces/external-currency.interface';
 import { map } from 'rxjs/operators';
-import { CURRENCY_EXTERNAL_API } from 'src/core/models/constants';
+import { CURRENCY_EXTERNAL_API } from '@core/models/constants';
 
 @Injectable()
 export class ExternalApiService {

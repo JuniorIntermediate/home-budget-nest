@@ -128,6 +128,8 @@ exports.Prisma.TransactionScalarFieldEnum = makeEnum({
   amount: 'amount',
   isDeleted: 'isDeleted',
   payerId: 'payerId',
+  currencyCode: 'currencyCode',
+  exchangeRate: 'exchangeRate',
   currencyId: 'currencyId',
   budgetId: 'budgetId',
   categoryId: 'categoryId',

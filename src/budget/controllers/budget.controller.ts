@@ -1,6 +1,6 @@
 import {
   BadRequestException,
-  Body,
+  Body, ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,9 +11,11 @@ import {
   Post,
   Put,
   Req,
-  UseGuards,
+  UseGuards, UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { BudgetService } from '../services/budget.service';
+import { BudgetService } from '@budget/services/budget.service';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -23,10 +25,11 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { BudgetDto, CreateBudgetDto, UpdateBudgetDto } from '../dto/budget.dto';
-import { JwtGuard } from '../../auth/guards/jwt.guard';
-import { RequestUserModel } from '../../core/models/request-user.model';
+import { BudgetDto, CreateBudgetDto, UpdateBudgetDto } from '@budget/dto/budget.dto';
+import { JwtGuard } from '@auth/guards/jwt.guard';
+import { RequestUserModel } from '@core/models/request-user.model';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 @ApiTags('budget')
@@ -44,18 +47,30 @@ export class BudgetController {
     type: BudgetDto,
   })
   async getBudgets(@Req() req: RequestUserModel): Promise<BudgetDto[]> {
-    return this.budgetService.getBudgets(req.user.email);
+    return this.budgetService.getBudgets(req.user.id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get(':id')
+  @ApiOperation({ summary: 'Get budget' })
+  @ApiOkResponse({
+    description: 'Return budget',
+    type: BudgetDto,
+  })
+  async getBudget(@Param('id', ParseIntPipe) id: number): Promise<BudgetDto> {
+    return this.budgetService.getBudget(id);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @ApiOperation({ summary: 'Create budget' })
   @ApiCreatedResponse({ description: 'The budget has been successfully created.', type: BudgetDto })
+  @UsePipes(new ValidationPipe({ transform: true }))
   create(
     @Req() req: RequestUserModel,
     @Body() createBudgetDto: CreateBudgetDto,
   ): Promise<BudgetDto> {
-    return this.budgetService.createBudget({ ...createBudgetDto, email: req.user.email });
+    return this.budgetService.createBudget({ ...createBudgetDto, userId: req.user.id });
   }
 
   @HttpCode(HttpStatus.OK)
@@ -63,6 +78,7 @@ export class BudgetController {
   @ApiOperation({ summary: 'Update budget' })
   @ApiOkResponse({ description: 'The budget has been successfully updated.', type: BudgetDto })
   @ApiBadRequestResponse({ description: 'Id provided in body are not equal to params.' })
+  @UsePipes(new ValidationPipe({ transform: true }))
   update(
     @Req() req: RequestUserModel,
     @Param('id', ParseIntPipe) id: number,
@@ -71,7 +87,7 @@ export class BudgetController {
     if (id !== updateBudgetDto.id) {
       throw new BadRequestException('Id\'s are not equal!');
     }
-    return this.budgetService.updateBudget({ ...updateBudgetDto, email: req.user.email });
+    return this.budgetService.updateBudget({ ...updateBudgetDto, userId: req.user.id });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

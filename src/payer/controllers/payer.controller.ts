@@ -12,6 +12,8 @@ import {
   Put,
   Req,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -21,10 +23,11 @@ import {
   ApiOkResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { RequestUserModel } from '../../core/models/request-user.model';
-import { JwtGuard } from '../../auth/guards/jwt.guard';
+import { RequestUserModel } from '@core/models/request-user.model';
+import { JwtGuard } from '@auth/guards/jwt.guard';
 import { PayerService } from '../service/payer.service';
-import { CreatePayerDto, PayerDto, UpdatePayerDto } from '../dto/payer.dto';
+import { CreatePayerDto, PayerDto, UpdatePayerDto } from '@payer/dto/payer.dto';
+import { PayerValidatorPipe } from '@payer/validators/payer-validator.pipe';
 
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
@@ -39,18 +42,27 @@ export class PayerController {
   @Get()
   @ApiOkResponse({ description: 'Return list of payers', isArray: true, type: PayerDto })
   async getPayers(@Req() req: RequestUserModel): Promise<PayerDto[]> {
-    return this.payerService.getPayers(req.user.email);
+    return this.payerService.getPayers(req.user.id);
   }
 
+  @HttpCode(HttpStatus.OK)
+  @Get(':id')
+  @ApiOkResponse({ description: 'Return payer', type: PayerDto })
+  async getPayer(@Param('id', ParseIntPipe) id: number): Promise<PayerDto> {
+    return this.payerService.getPayer(id);
+  }
+
+  @UsePipes(new ValidationPipe({ transform: true }), PayerValidatorPipe)
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @ApiCreatedResponse({ description: 'The payer has been successfully created.', type: PayerDto })
   async postCategory(
     @Req() req: RequestUserModel,
     @Body() payerDto: CreatePayerDto): Promise<PayerDto> {
-    return this.payerService.createPayer({ ...payerDto, email: req.user.email });
+    return this.payerService.createPayer({ ...payerDto, userId: req.user.id });
   }
 
+  @UsePipes(new ValidationPipe({ transform: true }), PayerValidatorPipe)
   @HttpCode(HttpStatus.OK)
   @Put(':id')
   @ApiOkResponse({ description: 'The payer has been successfully updated.', type: PayerDto })
@@ -62,7 +74,7 @@ export class PayerController {
     if (id !== payerDto.id) {
       throw new BadRequestException('Id\'s are not equal!');
     }
-    return this.payerService.updatePayer({ ...payerDto, email: req.user.email });
+    return this.payerService.updatePayer({ ...payerDto, userId: req.user.id });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

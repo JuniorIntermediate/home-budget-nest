@@ -6,20 +6,17 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { LoginDto } from '../dto/login.dto';
-import { UserRepository } from '../../core/repositories/user.repository';
-import { RegisterDto } from '../dto/register.dto';
-import { User } from '@prisma/client';
-import { JwtPayload } from '../dto/jwt.payload';
+import { JwtPayload, LoginDto, RegisterDto, ResetPasswordDto, TokenResponse, UserProfileDto } from '@auth/dto';
+import { UserRepository } from '@core/repositories/user.repository';
 import * as bcrypt from 'bcrypt';
-import { TokenResponse } from '../dto/token.response';
-import { PasswordInterface } from '../interfaces/password.interface';
-import { ActivationStatus, UserUpdateParams } from '../../core/schema-types/user.params';
+import { PasswordInterface } from '@auth/interfaces/password.interface';
+import { ActivationStatus, UserUpdateParams } from '@core/schema-types/user.params';
 import { MailerService } from '@nestjs-modules/mailer';
-import { IS_SMTP_PROVIDER, SENDGRID_EMAIL_FROM, SMTP_FROM, WEB_URL } from '../../core/models/constants';
-import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { IS_SMTP_PROVIDER, SENDGRID_EMAIL_FROM, SMTP_FROM, WEB_URL } from '@core/models/constants';
 import { InjectSendGrid, SendGridService } from '@ntegral/nestjs-sendgrid';
-import { PayerRepository } from '../../core/repositories/payer.repository';
+import { PayerRepository } from '@core/repositories/payer.repository';
+import { Mapper } from '@core/factories/mapper';
+import { User } from 'src/generated-prisma';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +24,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly userRepository: UserRepository,
     private readonly payerRepository: PayerRepository,
+    private readonly mapper: Mapper,
     @Optional() private readonly mailService: MailerService,
     @Optional() @InjectSendGrid() private readonly sendGridService: SendGridService,
   ) {
@@ -61,7 +59,7 @@ export class AuthService {
         verificationToken,
       });
     } catch (error) {
-      throw new InternalServerErrorException('There were a problem on user saving.');
+      throw new InternalServerErrorException('There was a problem on user saving.');
     }
   }
 
@@ -130,8 +128,9 @@ export class AuthService {
     }
   }
 
-  async findByPayload(jwtPayload: JwtPayload): Promise<User> {
-    return this.userRepository.findUserByUniqueField({ email: jwtPayload.email });
+  async findByPayload(jwtPayload: JwtPayload): Promise<UserProfileDto> {
+    const user = await this.userRepository.findUserByUniqueField({ id: jwtPayload.id });
+    return this.mapper.mapToDto(user, UserProfileDto);
   }
 
   private validatePassword = async (password: string, { passwordHash, passwordSalt }: User): Promise<boolean> => {
@@ -139,8 +138,8 @@ export class AuthService {
     return generatedHash === passwordHash;
   };
 
-  private createToken({ email, firstName, lastName }: User): TokenResponse {
-    const jwtPayload: JwtPayload = { firstName, lastName, email };
+  private createToken({ id }: User): TokenResponse {
+    const jwtPayload: JwtPayload = { id };
     const accessToken = this.jwtService.sign(jwtPayload);
     return {
       expiresIn: process.env.JWT_EXPIRES,

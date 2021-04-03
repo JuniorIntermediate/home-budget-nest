@@ -10,12 +10,15 @@ import {
   Post,
   Put,
   UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
-import { JwtGuard } from '../../auth/guards/jwt.guard';
-import { CategoryService } from '../service/category.service';
+import { JwtGuard } from '@auth/guards/jwt.guard';
+import { CategoryService } from '@category/service/category.service';
 import { ApiBearerAuth, ApiCreatedResponse, ApiNoContentResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { CreateSubcategoryDto, UpdateSubcategoryDto } from '../dto';
-import { CategoryTypeEnum } from '../enums/category-type.enum';
+import { CreateSubcategoryDto, UpdateSubcategoryDto } from '@category/dto';
+import { CategoryTypeEnum } from '@category/enums/category-type.enum';
+import { CategoryValidatorPipe } from '@category/validators/category-validator.pipe';
 
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
@@ -28,7 +31,8 @@ export class SubcategoryController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @ApiCreatedResponse({ description: 'The subcategory has been successfully created.' })
-  async postSubCategory(
+  @UsePipes(new ValidationPipe({ transform: true }), CategoryValidatorPipe)
+  async postSubcategory(
     @Param('categoryId', ParseIntPipe) parentId: number,
     @Body() subCategoryDto: CreateSubcategoryDto,
   ) {
@@ -41,7 +45,8 @@ export class SubcategoryController {
   @HttpCode(HttpStatus.OK)
   @Put(':id')
   @ApiOkResponse({ description: 'The subcategory has been successfully updated.' })
-  async updateSubCategory(
+  @UsePipes(new ValidationPipe({ transform: true }), CategoryValidatorPipe)
+  async updateSubcategory(
     @Param('categoryId', ParseIntPipe) parentId: number,
     @Param('id', ParseIntPipe) id: number,
     @Body() subCategoryDto: UpdateSubcategoryDto,

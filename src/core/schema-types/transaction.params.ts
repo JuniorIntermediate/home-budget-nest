@@ -1,13 +1,13 @@
-import { Currency, Expense, Prisma } from '@prisma/client';
+import { Currency, Prisma, Transaction } from 'src/generated-prisma';
 
-export type ExpenseCreateParams = Prisma.ExpenseCreateInput
-export type ExpenseGetParams = {
+export type TransactionCreateParams = Prisma.TransactionCreateInput
+export type TransactionGetParams = {
   skip?: number,
   take?: number,
-  where?: Prisma.ExpenseWhereInput,
-  orderBy?: Prisma.ExpenseOrderByInput
+  where?: Prisma.TransactionWhereInput,
+  orderBy?: Prisma.TransactionOrderByInput
 }
-export type GetExpenseWithCurrency = Expense & { currency: Currency };
+export type GetTransactionWithCurrency = Transaction & { currency?: Currency };
 type Filter<T> = {
   equals?: T
   in?: T[]
@@ -18,6 +18,7 @@ type Filter<T> = {
   gte?: T
   not?: T
 }
+
 export type DecimalFilter = Filter<number>;
 export type IntFilter = Filter<number>;
 export type IntNullableFilter = Filter<number>;

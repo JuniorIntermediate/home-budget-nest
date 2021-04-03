@@ -1,4 +1,4 @@
-import { EmailProviderEnum } from './email-provider.enum';
+import { EmailProviderEnum } from '@core/models/email-provider.enum';
 
 export const jwtConstants = {
   secret: process.env.JWT_SECRET,

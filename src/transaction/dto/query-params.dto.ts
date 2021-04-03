@@ -1,17 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { plainToClass, Transform, Type } from 'class-transformer';
-import { FieldEnum, OperatorEnum, OrderByFieldEnum, OrderDirectionEnum } from '../enums/filter.enum';
+import { FieldEnum, OperatorEnum, OrderByFieldEnum, OrderDirectionEnum } from '@transaction/enums/filter.enum';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from 'class-validator';
 
 export class FilterParameterDto {
   @ApiProperty({ enum: FieldEnum, enumName: 'field', example: 'date', description: 'Filter field' })
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  @Transform(({ value }) => (value ? value : null), { toClassOnly: true })
+  @Transform(({ value }: ({ value: FieldEnum })) => (value ? value : null), { toClassOnly: true })
+  @IsNotEmpty()
+  @IsEnum(FieldEnum)
   field: FieldEnum;
 
   @ApiProperty({ enum: OperatorEnum, enumName: 'operator', example: 'EQ', description: 'Filter operator' })
-  // eslint-disable-next-line max-len
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-call
-  @Transform(({ value }) => (value ? value.toUpperCase() : null), { toClassOnly: true })
+  @Transform(({ value }: ({ value: OperatorEnum })) => (value ? value.toUpperCase() : null), { toClassOnly: true })
+  @IsNotEmpty()
+  @IsEnum(OperatorEnum)
   operator: OperatorEnum;
 
   @ApiProperty({
@@ -36,16 +38,21 @@ export class FilterParameterDto {
       },
     ],
   })
+  @IsNotEmpty()
   value: string | string[] | Date | Date[] | number | number[];
 }
 
 export class QueryParamsDto {
   @ApiProperty({ required: false, example: 10, description: 'Limit result. Connected with page field.' })
-  @Transform(({ value }) => (value ? parseInt(value) : null), { toClassOnly: true })
+  @Transform(({ value }: ({ value: string })) => (value ? parseInt(value) : null), { toClassOnly: true })
+  @IsOptional()
+  @IsNumber()
   limit: number;
 
   @ApiProperty({ required: false, example: 1, description: 'Page describes db offset. Connected with limit field.' })
-  @Transform(({ value }) => (value ? parseInt(value) : null), { toClassOnly: true })
+  @Transform(({ value }: ({ value: string })) => (value ? parseInt(value) : null), { toClassOnly: true })
+  @IsOptional()
+  @IsNumber()
   page: number;
 
   @ApiProperty({
@@ -55,6 +62,8 @@ export class QueryParamsDto {
     enum: OrderByFieldEnum,
     example: OrderByFieldEnum.DATE,
   })
+  @IsOptional()
+  @IsEnum(OrderByFieldEnum)
   orderBy: OrderByFieldEnum;
 
   @ApiProperty({
@@ -64,9 +73,9 @@ export class QueryParamsDto {
     required: false,
     example: OrderDirectionEnum.DESC,
   })
-  // eslint-disable-next-line max-len
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-  @Transform(({ value }) => (value ? value.toLowerCase() : null), { toClassOnly: true })
+  @Transform(({ value }: ({ value: OrderDirectionEnum })) => (value ? value.toLowerCase() : null), { toClassOnly: true })
+  @IsOptional()
+  @IsEnum(OrderDirectionEnum)
   orderDirection: OrderDirectionEnum;
 
   @ApiProperty({
@@ -84,5 +93,6 @@ export class QueryParamsDto {
     toClassOnly: true,
   })
   @Type(() => FilterParameterDto)
+  @IsOptional()
   filters: FilterParameterDto[];
 }

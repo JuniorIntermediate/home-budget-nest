@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Payer } from '@prisma/client';
+import { PrismaService } from '@core/prisma.service';
 import {
   PayerCreateParams,
   PayerGetByUniqueFieldParams,
   PayerGetParams,
   PayerUpdateParams,
-} from '../schema-types/payer.params';
+} from '@core/schema-types/payer.params';
+import { Payer } from 'src/generated-prisma';
 
 @Injectable()
 export class PayerRepository {

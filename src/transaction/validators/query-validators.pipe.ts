@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-import { FilterParameterDto, QueryParamsDto } from '../dto/query-params.dto';
-import { plainToClass } from 'class-transformer';
+import { FilterParameterDto, QueryParamsDto } from '@transaction/dto/query-params.dto';
 import { DateTime } from 'luxon';
-import { FieldEnum, OperatorEnum } from '../enums/filter.enum';
+import { FieldEnum, OperatorEnum } from '@transaction/enums/filter.enum';
 
 @Injectable()
 export class QueryValidatorPipe implements PipeTransform {
@@ -10,8 +9,7 @@ export class QueryValidatorPipe implements PipeTransform {
     if (this.isEmpty(value)) {
       return null;
     }
-    const object: QueryParamsDto = plainToClass(QueryParamsDto, value);
-    const errors = this.validate(object);
+    const errors = this.validate(value);
     if (errors.length) {
       throw new BadRequestException(`Validation failed: ${errors.join(' ')}`);
     }

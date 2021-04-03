@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { ExpenseGetParams, PrismaFilterParams } from '../../core/schema-types/expense.params';
-import { FilterParameterDto, QueryParamsDto } from '../dto/query-params.dto';
-import { OperatorEnum } from '../enums/filter.enum';
+import { PrismaFilterParams, TransactionGetParams } from '@core/schema-types/transaction.params';
+import { FilterParameterDto, QueryParamsDto } from '@transaction/dto/query-params.dto';
+import { OperatorEnum } from '@transaction/enums/filter.enum';
 
 @Injectable()
 export class FilterBuilder {
-  private queryBuilder: ExpenseGetParams = {};
+  private queryBuilder: TransactionGetParams = {};
 
-  build(): ExpenseGetParams {
+  build(): TransactionGetParams {
     return this.queryBuilder;
   }
 
@@ -27,9 +27,9 @@ export class FilterBuilder {
           ...this.queryBuilder,
           where: {
             ...this.queryBuilder.where,
-            [filter.field]: filterOperator
-          }
-        }
+            [filter.field]: filterOperator,
+          },
+        };
       });
     }
     return this;

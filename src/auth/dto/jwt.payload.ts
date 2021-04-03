@@ -1,10 +1,6 @@
-import { ApiResponseProperty } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class JwtPayload {
-  @ApiResponseProperty()
-  email: string;
-  @ApiResponseProperty()
-  firstName: string;
-  @ApiResponseProperty()
-  lastName: string;
+  @ApiProperty()
+  id: number;
 }

@@ -1,5 +1,5 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { TokenResponse } from './token.response';
+import { TokenResponse } from '@auth/dto/token.response';
 
 @ApiExtraModels(TokenResponse)
 export class LoginDto {

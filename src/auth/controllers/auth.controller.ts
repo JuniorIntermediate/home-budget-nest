@@ -1,10 +1,21 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Request, UseGuards } from '@nestjs/common';
-import { AuthService } from '../services/auth.service';
-import { RegisterDto } from '../dto/register.dto';
-import { LoginDto } from '../dto/login.dto';
-import { JwtGuard } from '../guards/jwt.guard';
-import { JwtPayload } from '../dto/jwt.payload';
-import { TokenResponse } from '../dto/token.response';
+import {
+  Body,
+  ClassSerializerInterceptor,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Request,
+  UseGuards,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
+import { AuthService } from '@auth/services/auth.service';
+import { LoginDto, RegisterDto, ResetPasswordDto, TokenResponse, UserProfileDto } from '@auth/dto';
+import { JwtGuard } from '@auth/guards/jwt.guard';
 import {
   ApiBadRequestResponse,
   ApiBearerAuth,
@@ -14,8 +25,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { RequestUserModel } from '../../core/models/request-user.model';
-import { ResetPasswordDto } from '../dto/reset-password.dto';
+import { RequestUserModel } from '@core/models/request-user.model';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -23,12 +33,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {
   }
 
+  @UseInterceptors(ClassSerializerInterceptor)
   @Post('register')
   @HttpCode(201)
   @HttpCode(400)
   @ApiCreatedResponse({ description: 'The user has been successfully created.' })
   @ApiBadRequestResponse({ description: 'Provided user already exist in app.' })
   @ApiInternalServerErrorResponse({ description: 'Unexpected error while sending email.' })
+  @UsePipes(new ValidationPipe({ transform: true }))
   public async register(@Body() registerDto: RegisterDto) {
     await this.authService.register(registerDto);
   }
@@ -39,7 +51,7 @@ export class AuthController {
   @ApiOkResponse({ description: 'The user has been successfully logged in', type: TokenResponse })
   @ApiUnauthorizedResponse({ description: 'Provided data doesn\'t exist in database.' })
   public async login(@Body() loginDto: LoginDto): Promise<TokenResponse> {
-    return await this.authService.login(loginDto);
+    return this.authService.login(loginDto);
   }
 
   @UseGuards(JwtGuard)
@@ -47,10 +59,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @HttpCode(HttpStatus.UNAUTHORIZED)
   @ApiBearerAuth()
-  @ApiOkResponse({ description: 'The logged user information stored in JWT', type: JwtPayload })
+  @ApiOkResponse({ description: 'The logged user information stored in JWT', type: UserProfileDto })
   @ApiUnauthorizedResponse({ description: 'User are not logged in' })
-  public getProfile(@Request() req: RequestUserModel): JwtPayload {
-    return req.user;
+  public async getProfile(@Request() req: RequestUserModel): Promise<UserProfileDto> {
+    return this.authService.findByPayload(req.user);
   }
 
   @Get('verify-token/:token')
@@ -59,7 +71,7 @@ export class AuthController {
   @ApiOkResponse({ description: 'Token was good and user has been successfully verified' })
   @ApiBadRequestResponse({ description: 'Token has been already used or was invalid.' })
   public async getVerifyToken(@Param('token') token: string): Promise<boolean> {
-    return await this.authService.verifyEmailToken(token);
+    return this.authService.verifyEmailToken(token);
   }
 
   @Get('forgot-password/:email')
@@ -78,6 +90,6 @@ export class AuthController {
   @ApiBadRequestResponse({ description: 'Token has been already used or was invalid.' })
   @ApiInternalServerErrorResponse({ description: 'Unexpected error while sending email.' })
   public async postResetPassword(@Body() resetPasswordDto: ResetPasswordDto): Promise<boolean> {
-    return await this.authService.setNewPassword(resetPasswordDto);
+    return this.authService.setNewPassword(resetPasswordDto);
   }
 }

@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
-import { PayerController } from './controllers/payer.controller';
-import { PayerService } from './service/payer.service';
+import { PayerController } from '@payer/controllers/payer.controller';
+import { PayerService } from '@payer/service/payer.service';
+import { PayerValidatorPipe } from '@payer/validators/payer-validator.pipe';
 
 @Module({
   controllers: [PayerController],
-  providers: [PayerService]
+  providers: [PayerValidatorPipe, PayerService],
 })
-export class PayerModule {}
+export class PayerModule {
+}

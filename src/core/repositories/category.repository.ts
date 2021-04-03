@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import { Category, IncomeCategory, OutcomeCategory, SubCategory } from '@prisma/client';
+import { PrismaService } from '@core/prisma.service';
 import {
   CategoryCreateParams,
   CategoryGetByUniqueFieldParams,
@@ -18,7 +17,8 @@ import {
   SubcategoryCreateParams,
   SubcategoryGetByUniqueFieldParams,
   SubcategoryUpdateParams,
-} from '../schema-types/category.params';
+} from '@core/schema-types/category.params';
+import { Category, IncomeCategory, OutcomeCategory, Subcategory } from 'src/generated-prisma';
 
 @Injectable()
 export class CategoryRepository {
@@ -101,8 +101,8 @@ export class CategoryRepository {
     });
   }
 
-  async findCategoryByUniqueField(where: CategoryGetByUniqueFieldParams): Promise<Category | null> {
-    return this.prisma.category.findUnique({ where });
+  async findCategoryByUniqueField(where: CategoryGetByUniqueFieldParams): Promise<GetCategoryWithSubCategories> {
+    return this.prisma.category.findUnique({ where, include: { subCategories: true } });
   }
 
   async deleteCategory(id: number): Promise<void> {
@@ -126,16 +126,16 @@ export class CategoryRepository {
     });
   }
 
-  async findSubcategoryByUniqueField(where: SubcategoryGetByUniqueFieldParams): Promise<SubCategory | null> {
-    return this.prisma.subCategory.findUnique({ where });
+  async findSubcategoryByUniqueField(where: SubcategoryGetByUniqueFieldParams): Promise<Subcategory | null> {
+    return this.prisma.subcategory.findUnique({ where });
   }
 
-  async createSubcategory(data: SubcategoryCreateParams): Promise<SubCategory> {
-    return this.prisma.subCategory.create({ data });
+  async createSubcategory(data: SubcategoryCreateParams): Promise<Subcategory> {
+    return this.prisma.subcategory.create({ data });
   }
 
-  async updateSubcategory(params: SubcategoryUpdateParams): Promise<SubCategory> {
-    return this.prisma.subCategory.update(params);
+  async updateSubcategory(params: SubcategoryUpdateParams): Promise<Subcategory> {
+    return this.prisma.subcategory.update(params);
   }
 
   async deleteSubcategory(id: number): Promise<void> {

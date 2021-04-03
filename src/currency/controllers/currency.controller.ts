@@ -1,6 +1,6 @@
 import {
   BadRequestException,
-  Body,
+  Body, ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -11,7 +11,9 @@ import {
   Post,
   Put,
   Req,
-  UseGuards,
+  UseGuards, UseInterceptors,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
@@ -22,11 +24,13 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { RequestUserModel } from '../../core/models/request-user.model';
-import { JwtGuard } from '../../auth/guards/jwt.guard';
-import { CurrencyService } from '../services/currency.service';
-import { CreateCurrencyDto, CurrencyDto, UpdateCurrencyDto } from '../dto/currency.dto';
+import { RequestUserModel } from '@core/models/request-user.model';
+import { JwtGuard } from '@auth/guards/jwt.guard';
+import { CurrencyService } from '@currency/services/currency.service';
+import { CreateCurrencyDto, CurrencyDto, UpdateCurrencyDto } from '@currency/dto/currency.dto';
+import { CurrencyValidatorPipe } from '@currency/validators/currency-validator.pipe';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @ApiBearerAuth()
 @UseGuards(JwtGuard)
 @ApiTags('currency')
@@ -40,17 +44,18 @@ export class CurrencyController {
   @ApiOkResponse({ description: 'Return list of currencies', isArray: true, type: CurrencyDto })
   @ApiOperation({ summary: 'Fetch currencies from database and external api' })
   async getCurrencies(@Req() req: RequestUserModel): Promise<CurrencyDto[]> {
-    return this.currencyService.getCurrencies(req.user.email);
+    return this.currencyService.getCurrencies(req.user.id);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @ApiCreatedResponse({ description: 'The currency has been successfully created.', type: CurrencyDto })
   @ApiOperation({ summary: 'Create custom currency for user purpose' })
+  @UsePipes(new ValidationPipe({ transform: true }), CurrencyValidatorPipe)
   async postCurrency(
     @Req() req: RequestUserModel,
     @Body() currencyDto: CreateCurrencyDto): Promise<CurrencyDto> {
-    return this.currencyService.createCurrency({ ...currencyDto, email: req.user.email });
+    return this.currencyService.createCurrency({ ...currencyDto, userId: req.user.id });
   }
 
   @HttpCode(HttpStatus.OK)
@@ -58,6 +63,7 @@ export class CurrencyController {
   @ApiOkResponse({ description: 'The currency has been successfully updated.', type: CurrencyDto })
   @ApiOperation({ summary: 'Update custom currency' })
   @ApiBadRequestResponse({ description: 'Id provided in body are not equal to params.' })
+  @UsePipes(new ValidationPipe({ transform: true }), CurrencyValidatorPipe)
   async updateCurrency(
     @Param('id', ParseIntPipe) id: number,
     @Req() req: RequestUserModel,
@@ -65,7 +71,7 @@ export class CurrencyController {
     if (id !== currencyDto.id) {
       throw new BadRequestException('Id\'s are not equal!');
     }
-    return this.currencyService.updateCurrency({ ...currencyDto, email: req.user.email });
+    return this.currencyService.updateCurrency({ ...currencyDto, userId: req.user.id });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

@@ -98,7 +98,9 @@ export type Transaction = {
   amount: Prisma.Decimal
   isDeleted: boolean
   payerId: number
-  currencyId: number
+  currencyCode: string | null
+  exchangeRate: Prisma.Decimal | null
+  currencyId: number | null
   budgetId: number
   categoryId: number
   subcategoryId: number | null
@@ -119,7 +121,7 @@ export type RecurringTransaction = {
   activationDate: Date
   isDeleted: boolean
   payerId: number
-  currencyId: number
+  currencyId: number | null
   categoryId: number
   subcategoryId: number | null
   outcomeCategoryId: number | null
@@ -6121,7 +6123,8 @@ export namespace Prisma {
     id: number
     amount: Decimal
     payerId: number
-    currencyId: number
+    exchangeRate: Decimal | null
+    currencyId: number | null
     budgetId: number
     categoryId: number
     subcategoryId: number | null
@@ -6133,7 +6136,8 @@ export namespace Prisma {
     id: number
     amount: Decimal
     payerId: number
-    currencyId: number
+    exchangeRate: Decimal | null
+    currencyId: number | null
     budgetId: number
     categoryId: number
     subcategoryId: number | null
@@ -6148,7 +6152,9 @@ export namespace Prisma {
     amount: Decimal
     isDeleted: boolean | null
     payerId: number
-    currencyId: number
+    currencyCode: string | null
+    exchangeRate: Decimal | null
+    currencyId: number | null
     budgetId: number
     categoryId: number
     subcategoryId: number | null
@@ -6163,7 +6169,9 @@ export namespace Prisma {
     amount: Decimal
     isDeleted: boolean | null
     payerId: number
-    currencyId: number
+    currencyCode: string | null
+    exchangeRate: Decimal | null
+    currencyId: number | null
     budgetId: number
     categoryId: number
     subcategoryId: number | null
@@ -6178,7 +6186,9 @@ export namespace Prisma {
     amount: number
     isDeleted: number | null
     payerId: number
-    currencyId: number
+    currencyCode: number | null
+    exchangeRate: number | null
+    currencyId: number | null
     budgetId: number
     categoryId: number
     subcategoryId: number | null
@@ -6192,6 +6202,7 @@ export namespace Prisma {
     id?: true
     amount?: true
     payerId?: true
+    exchangeRate?: true
     currencyId?: true
     budgetId?: true
     categoryId?: true
@@ -6204,6 +6215,7 @@ export namespace Prisma {
     id?: true
     amount?: true
     payerId?: true
+    exchangeRate?: true
     currencyId?: true
     budgetId?: true
     categoryId?: true
@@ -6219,6 +6231,8 @@ export namespace Prisma {
     amount?: true
     isDeleted?: true
     payerId?: true
+    currencyCode?: true
+    exchangeRate?: true
     currencyId?: true
     budgetId?: true
     categoryId?: true
@@ -6234,6 +6248,8 @@ export namespace Prisma {
     amount?: true
     isDeleted?: true
     payerId?: true
+    currencyCode?: true
+    exchangeRate?: true
     currencyId?: true
     budgetId?: true
     categoryId?: true
@@ -6249,6 +6265,8 @@ export namespace Prisma {
     amount?: true
     isDeleted?: true
     payerId?: true
+    currencyCode?: true
+    exchangeRate?: true
     currencyId?: true
     budgetId?: true
     categoryId?: true
@@ -6352,7 +6370,9 @@ export namespace Prisma {
     amount: Decimal
     isDeleted: boolean
     payerId: number
-    currencyId: number
+    currencyCode: string | null
+    exchangeRate: Decimal | null
+    currencyId: number | null
     budgetId: number
     categoryId: number
     subcategoryId: number | null
@@ -6380,6 +6400,8 @@ export namespace Prisma {
     isDeleted?: boolean
     payer?: boolean | PayerArgs
     payerId?: boolean
+    currencyCode?: boolean
+    exchangeRate?: boolean
     currency?: boolean | CurrencyArgs
     currencyId?: boolean
     payFrom?: boolean | BudgetArgs
@@ -6418,7 +6440,7 @@ export namespace Prisma {
           P extends 'payer'
         ? PayerGetPayload<S['include'][P]> :
         P extends 'currency'
-        ? CurrencyGetPayload<S['include'][P]> :
+        ? CurrencyGetPayload<S['include'][P]> | null :
         P extends 'payFrom'
         ? BudgetGetPayload<S['include'][P]> :
         P extends 'category'
@@ -6437,7 +6459,7 @@ export namespace Prisma {
           P extends 'payer'
         ? PayerGetPayload<S['select'][P]> :
         P extends 'currency'
-        ? CurrencyGetPayload<S['select'][P]> :
+        ? CurrencyGetPayload<S['select'][P]> | null :
         P extends 'payFrom'
         ? BudgetGetPayload<S['select'][P]> :
         P extends 'category'
@@ -7093,7 +7115,7 @@ export namespace Prisma {
     id: number
     amount: Decimal
     payerId: number
-    currencyId: number
+    currencyId: number | null
     categoryId: number
     subcategoryId: number | null
     outcomeCategoryId: number | null
@@ -7104,7 +7126,7 @@ export namespace Prisma {
     id: number
     amount: Decimal
     payerId: number
-    currencyId: number
+    currencyId: number | null
     categoryId: number
     subcategoryId: number | null
     outcomeCategoryId: number | null
@@ -7120,7 +7142,7 @@ export namespace Prisma {
     activationDate: Date | null
     isDeleted: boolean | null
     payerId: number
-    currencyId: number
+    currencyId: number | null
     categoryId: number
     subcategoryId: number | null
     outcomeCategoryId: number | null
@@ -7136,7 +7158,7 @@ export namespace Prisma {
     activationDate: Date | null
     isDeleted: boolean | null
     payerId: number
-    currencyId: number
+    currencyId: number | null
     categoryId: number
     subcategoryId: number | null
     outcomeCategoryId: number | null
@@ -7152,7 +7174,7 @@ export namespace Prisma {
     activationDate: number | null
     isDeleted: number | null
     payerId: number
-    currencyId: number
+    currencyId: number | null
     categoryId: number
     subcategoryId: number | null
     outcomeCategoryId: number | null
@@ -7328,7 +7350,7 @@ export namespace Prisma {
     activationDate: Date
     isDeleted: boolean
     payerId: number
-    currencyId: number
+    currencyId: number | null
     categoryId: number
     subcategoryId: number | null
     outcomeCategoryId: number | null
@@ -7394,7 +7416,7 @@ export namespace Prisma {
           P extends 'payer'
         ? PayerGetPayload<S['include'][P]> :
         P extends 'currency'
-        ? CurrencyGetPayload<S['include'][P]> :
+        ? CurrencyGetPayload<S['include'][P]> | null :
         P extends 'budgets'
         ? Array < TransactionsOnBudgetsGetPayload<S['include'][P]>>  :
         P extends 'category'
@@ -7413,7 +7435,7 @@ export namespace Prisma {
           P extends 'payer'
         ? PayerGetPayload<S['select'][P]> :
         P extends 'currency'
-        ? CurrencyGetPayload<S['select'][P]> :
+        ? CurrencyGetPayload<S['select'][P]> | null :
         P extends 'budgets'
         ? Array < TransactionsOnBudgetsGetPayload<S['select'][P]>>  :
         P extends 'category'
@@ -10715,6 +10737,8 @@ export namespace Prisma {
     amount: 'amount',
     isDeleted: 'isDeleted',
     payerId: 'payerId',
+    currencyCode: 'currencyCode',
+    exchangeRate: 'exchangeRate',
     currencyId: 'currencyId',
     budgetId: 'budgetId',
     categoryId: 'categoryId',
@@ -11047,8 +11071,10 @@ export namespace Prisma {
     isDeleted?: BoolFilter | boolean
     payer?: XOR<PayerRelationFilter, PayerWhereInput>
     payerId?: IntFilter | number
-    currency?: XOR<CurrencyRelationFilter, CurrencyWhereInput>
-    currencyId?: IntFilter | number
+    currencyCode?: StringNullableFilter | string | null
+    exchangeRate?: DecimalNullableFilter | Decimal | number | string | null
+    currency?: XOR<CurrencyRelationFilter, CurrencyWhereInput> | null
+    currencyId?: IntNullableFilter | number | null
     payFrom?: XOR<BudgetRelationFilter, BudgetWhereInput>
     budgetId?: IntFilter | number
     category?: XOR<CategoryRelationFilter, CategoryWhereInput>
@@ -11068,6 +11094,8 @@ export namespace Prisma {
     amount?: SortOrder
     isDeleted?: SortOrder
     payerId?: SortOrder
+    currencyCode?: SortOrder
+    exchangeRate?: SortOrder
     currencyId?: SortOrder
     budgetId?: SortOrder
     categoryId?: SortOrder
@@ -11090,7 +11118,9 @@ export namespace Prisma {
     amount?: DecimalWithAggregatesFilter | Decimal | number | string
     isDeleted?: BoolWithAggregatesFilter | boolean
     payerId?: IntWithAggregatesFilter | number
-    currencyId?: IntWithAggregatesFilter | number
+    currencyCode?: StringNullableWithAggregatesFilter | string | null
+    exchangeRate?: DecimalNullableWithAggregatesFilter | Decimal | number | string | null
+    currencyId?: IntNullableWithAggregatesFilter | number | null
     budgetId?: IntWithAggregatesFilter | number
     categoryId?: IntWithAggregatesFilter | number
     subcategoryId?: IntNullableWithAggregatesFilter | number | null
@@ -11111,8 +11141,8 @@ export namespace Prisma {
     isDeleted?: BoolFilter | boolean
     payer?: XOR<PayerRelationFilter, PayerWhereInput>
     payerId?: IntFilter | number
-    currency?: XOR<CurrencyRelationFilter, CurrencyWhereInput>
-    currencyId?: IntFilter | number
+    currency?: XOR<CurrencyRelationFilter, CurrencyWhereInput> | null
+    currencyId?: IntNullableFilter | number | null
     budgets?: TransactionsOnBudgetsListRelationFilter
     category?: XOR<CategoryRelationFilter, CategoryWhereInput>
     categoryId?: IntFilter | number
@@ -11156,7 +11186,7 @@ export namespace Prisma {
     activationDate?: DateTimeWithAggregatesFilter | Date | string
     isDeleted?: BoolWithAggregatesFilter | boolean
     payerId?: IntWithAggregatesFilter | number
-    currencyId?: IntWithAggregatesFilter | number
+    currencyId?: IntNullableWithAggregatesFilter | number | null
     categoryId?: IntWithAggregatesFilter | number
     subcategoryId?: IntNullableWithAggregatesFilter | number | null
     outcomeCategoryId?: IntNullableWithAggregatesFilter | number | null
@@ -11668,8 +11698,10 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     payer: PayerCreateNestedOneWithoutTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutTransactionsInput
+    currency?: CurrencyCreateNestedOneWithoutTransactionsInput
     payFrom: BudgetCreateNestedOneWithoutTransactionsInput
     category: CategoryCreateNestedOneWithoutTransactionsInput
     subcategory?: SubcategoryCreateNestedOneWithoutTransactionsInput
@@ -11684,7 +11716,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -11697,8 +11731,10 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
     payer?: PayerUpdateOneRequiredWithoutTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutTransactionsInput
+    currency?: CurrencyUpdateOneWithoutTransactionsInput
     payFrom?: BudgetUpdateOneRequiredWithoutTransactionsInput
     category?: CategoryUpdateOneRequiredWithoutTransactionsInput
     subcategory?: SubcategoryUpdateOneWithoutTransactionsInput
@@ -11713,7 +11749,9 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     budgetId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -11728,7 +11766,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -11741,6 +11781,8 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
   }
 
   export type TransactionUncheckedUpdateManyInput = {
@@ -11750,7 +11792,9 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     budgetId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -11766,7 +11810,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payer: PayerCreateNestedOneWithoutRecurringTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutRecurringTransactionInput
+    currency?: CurrencyCreateNestedOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsCreateNestedManyWithoutTransactionInput
     category: CategoryCreateNestedOneWithoutRecurringTransactionInput
     subcategory?: SubcategoryCreateNestedOneWithoutRecurringTransactionInput
@@ -11783,7 +11827,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -11799,7 +11843,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payer?: PayerUpdateOneRequiredWithoutRecurringTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutRecurringTransactionInput
+    currency?: CurrencyUpdateOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsUpdateManyWithoutTransactionInput
     category?: CategoryUpdateOneRequiredWithoutRecurringTransactionInput
     subcategory?: SubcategoryUpdateOneWithoutRecurringTransactionInput
@@ -11816,7 +11860,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -11833,7 +11877,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -11858,7 +11902,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -12237,19 +12281,35 @@ export namespace Prisma {
     isNot?: PayerWhereInput
   }
 
+  export type StringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableFilter | string | null
+  }
+
+  export type DecimalNullableFilter = {
+    equals?: Decimal | number | string | null
+    in?: Enumerable<Decimal> | Enumerable<number> | Enumerable<string> | null
+    notIn?: Enumerable<Decimal> | Enumerable<number> | Enumerable<string> | null
+    lt?: Decimal | number | string
+    lte?: Decimal | number | string
+    gt?: Decimal | number | string
+    gte?: Decimal | number | string
+    not?: NestedDecimalNullableFilter | Decimal | number | string | null
+  }
+
   export type CurrencyRelationFilter = {
-    is?: CurrencyWhereInput
-    isNot?: CurrencyWhereInput
-  }
-
-  export type BudgetRelationFilter = {
-    is?: BudgetWhereInput
-    isNot?: BudgetWhereInput
-  }
-
-  export type SubcategoryRelationFilter = {
-    is?: SubcategoryWhereInput | null
-    isNot?: SubcategoryWhereInput | null
+    is?: CurrencyWhereInput | null
+    isNot?: CurrencyWhereInput | null
   }
 
   export type IntNullableFilter = {
@@ -12263,6 +12323,16 @@ export namespace Prisma {
     not?: NestedIntNullableFilter | number | null
   }
 
+  export type BudgetRelationFilter = {
+    is?: BudgetWhereInput
+    isNot?: BudgetWhereInput
+  }
+
+  export type SubcategoryRelationFilter = {
+    is?: SubcategoryWhereInput | null
+    isNot?: SubcategoryWhereInput | null
+  }
+
   export type OutcomeCategoryRelationFilter = {
     is?: OutcomeCategoryWhereInput | null
     isNot?: OutcomeCategoryWhereInput | null
@@ -12271,6 +12341,40 @@ export namespace Prisma {
   export type IncomeCategoryRelationFilter = {
     is?: IncomeCategoryWhereInput | null
     isNot?: IncomeCategoryWhereInput | null
+  }
+
+  export type StringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    mode?: QueryMode
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    count?: NestedIntNullableFilter
+    min?: NestedStringNullableFilter
+    max?: NestedStringNullableFilter
+  }
+
+  export type DecimalNullableWithAggregatesFilter = {
+    equals?: Decimal | number | string | null
+    in?: Enumerable<Decimal> | Enumerable<number> | Enumerable<string> | null
+    notIn?: Enumerable<Decimal> | Enumerable<number> | Enumerable<string> | null
+    lt?: Decimal | number | string
+    lte?: Decimal | number | string
+    gt?: Decimal | number | string
+    gte?: Decimal | number | string
+    not?: NestedDecimalNullableWithAggregatesFilter | Decimal | number | string | null
+    count?: NestedIntNullableFilter
+    avg?: NestedDecimalNullableFilter
+    sum?: NestedDecimalNullableFilter
+    min?: NestedDecimalNullableFilter
+    max?: NestedDecimalNullableFilter
   }
 
   export type IntNullableWithAggregatesFilter = {
@@ -12297,21 +12401,6 @@ export namespace Prisma {
   export type TransactionsOnBudgetsBudgetIdTransactionIdCompoundUniqueInput = {
     budgetId: number
     transactionId: number
-  }
-
-  export type StringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableFilter | string | null
   }
 
   export type EnumActivationStatusFilter = {
@@ -12355,24 +12444,6 @@ export namespace Prisma {
     every?: CurrencyWhereInput
     some?: CurrencyWhereInput
     none?: CurrencyWhereInput
-  }
-
-  export type StringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    mode?: QueryMode
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    count?: NestedIntNullableFilter
-    min?: NestedStringNullableFilter
-    max?: NestedStringNullableFilter
   }
 
   export type EnumActivationStatusWithAggregatesFilter = {
@@ -13089,6 +13160,18 @@ export namespace Prisma {
     connect?: IncomeCategoryWhereUniqueInput
   }
 
+  export type NullableStringFieldUpdateOperationsInput = {
+    set?: string | null
+  }
+
+  export type NullableDecimalFieldUpdateOperationsInput = {
+    set?: Decimal | number | string | null
+    increment?: Decimal | number | string
+    decrement?: Decimal | number | string
+    multiply?: Decimal | number | string
+    divide?: Decimal | number | string
+  }
+
   export type PayerUpdateOneRequiredWithoutTransactionsInput = {
     create?: XOR<PayerCreateWithoutTransactionsInput, PayerUncheckedCreateWithoutTransactionsInput>
     connectOrCreate?: PayerCreateOrConnectWithoutTransactionsInput
@@ -13097,11 +13180,13 @@ export namespace Prisma {
     update?: XOR<PayerUpdateWithoutTransactionsInput, PayerUncheckedUpdateWithoutTransactionsInput>
   }
 
-  export type CurrencyUpdateOneRequiredWithoutTransactionsInput = {
+  export type CurrencyUpdateOneWithoutTransactionsInput = {
     create?: XOR<CurrencyCreateWithoutTransactionsInput, CurrencyUncheckedCreateWithoutTransactionsInput>
     connectOrCreate?: CurrencyCreateOrConnectWithoutTransactionsInput
     upsert?: CurrencyUpsertWithoutTransactionsInput
     connect?: CurrencyWhereUniqueInput
+    disconnect?: boolean
+    delete?: boolean
     update?: XOR<CurrencyUpdateWithoutTransactionsInput, CurrencyUncheckedUpdateWithoutTransactionsInput>
   }
 
@@ -13217,11 +13302,13 @@ export namespace Prisma {
     update?: XOR<PayerUpdateWithoutRecurringTransactionsInput, PayerUncheckedUpdateWithoutRecurringTransactionsInput>
   }
 
-  export type CurrencyUpdateOneRequiredWithoutRecurringTransactionInput = {
+  export type CurrencyUpdateOneWithoutRecurringTransactionInput = {
     create?: XOR<CurrencyCreateWithoutRecurringTransactionInput, CurrencyUncheckedCreateWithoutRecurringTransactionInput>
     connectOrCreate?: CurrencyCreateOrConnectWithoutRecurringTransactionInput
     upsert?: CurrencyUpsertWithoutRecurringTransactionInput
     connect?: CurrencyWhereUniqueInput
+    disconnect?: boolean
+    delete?: boolean
     update?: XOR<CurrencyUpdateWithoutRecurringTransactionInput, CurrencyUncheckedUpdateWithoutRecurringTransactionInput>
   }
 
@@ -13499,10 +13586,6 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<CurrencyCreateOrConnectWithoutUserInput>
     createMany?: CurrencyCreateManyUserInputEnvelope
     connect?: Enumerable<CurrencyWhereUniqueInput>
-  }
-
-  export type NullableStringFieldUpdateOperationsInput = {
-    set?: string | null
   }
 
   export type EnumActivationStatusFieldUpdateOperationsInput = {
@@ -13828,6 +13911,31 @@ export namespace Prisma {
     max?: NestedDateTimeFilter
   }
 
+  export type NestedStringNullableFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableFilter | string | null
+  }
+
+  export type NestedDecimalNullableFilter = {
+    equals?: Decimal | number | string | null
+    in?: Enumerable<Decimal> | Enumerable<number> | Enumerable<string> | null
+    notIn?: Enumerable<Decimal> | Enumerable<number> | Enumerable<string> | null
+    lt?: Decimal | number | string
+    lte?: Decimal | number | string
+    gt?: Decimal | number | string
+    gte?: Decimal | number | string
+    not?: NestedDecimalNullableFilter | Decimal | number | string | null
+  }
+
   export type NestedIntNullableFilter = {
     equals?: number | null
     in?: Enumerable<number> | null
@@ -13837,6 +13945,39 @@ export namespace Prisma {
     gt?: number
     gte?: number
     not?: NestedIntNullableFilter | number | null
+  }
+
+  export type NestedStringNullableWithAggregatesFilter = {
+    equals?: string | null
+    in?: Enumerable<string> | null
+    notIn?: Enumerable<string> | null
+    lt?: string
+    lte?: string
+    gt?: string
+    gte?: string
+    contains?: string
+    startsWith?: string
+    endsWith?: string
+    not?: NestedStringNullableWithAggregatesFilter | string | null
+    count?: NestedIntNullableFilter
+    min?: NestedStringNullableFilter
+    max?: NestedStringNullableFilter
+  }
+
+  export type NestedDecimalNullableWithAggregatesFilter = {
+    equals?: Decimal | number | string | null
+    in?: Enumerable<Decimal> | Enumerable<number> | Enumerable<string> | null
+    notIn?: Enumerable<Decimal> | Enumerable<number> | Enumerable<string> | null
+    lt?: Decimal | number | string
+    lte?: Decimal | number | string
+    gt?: Decimal | number | string
+    gte?: Decimal | number | string
+    not?: NestedDecimalNullableWithAggregatesFilter | Decimal | number | string | null
+    count?: NestedIntNullableFilter
+    avg?: NestedDecimalNullableFilter
+    sum?: NestedDecimalNullableFilter
+    min?: NestedDecimalNullableFilter
+    max?: NestedDecimalNullableFilter
   }
 
   export type NestedIntNullableWithAggregatesFilter = {
@@ -13866,42 +14007,11 @@ export namespace Prisma {
     not?: NestedFloatNullableFilter | number | null
   }
 
-  export type NestedStringNullableFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableFilter | string | null
-  }
-
   export type NestedEnumActivationStatusFilter = {
     equals?: ActivationStatus
     in?: Enumerable<ActivationStatus>
     notIn?: Enumerable<ActivationStatus>
     not?: NestedEnumActivationStatusFilter | ActivationStatus
-  }
-
-  export type NestedStringNullableWithAggregatesFilter = {
-    equals?: string | null
-    in?: Enumerable<string> | null
-    notIn?: Enumerable<string> | null
-    lt?: string
-    lte?: string
-    gt?: string
-    gte?: string
-    contains?: string
-    startsWith?: string
-    endsWith?: string
-    not?: NestedStringNullableWithAggregatesFilter | string | null
-    count?: NestedIntNullableFilter
-    min?: NestedStringNullableFilter
-    max?: NestedStringNullableFilter
   }
 
   export type NestedEnumActivationStatusWithAggregatesFilter = {
@@ -13955,8 +14065,10 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     payer: PayerCreateNestedOneWithoutTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutTransactionsInput
+    currency?: CurrencyCreateNestedOneWithoutTransactionsInput
     category: CategoryCreateNestedOneWithoutTransactionsInput
     subcategory?: SubcategoryCreateNestedOneWithoutTransactionsInput
     outcomeCategory?: OutcomeCategoryCreateNestedOneWithoutTransactionsInput
@@ -13970,7 +14082,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -14069,7 +14183,9 @@ export namespace Prisma {
     amount?: DecimalFilter | Decimal | number | string
     isDeleted?: BoolFilter | boolean
     payerId?: IntFilter | number
-    currencyId?: IntFilter | number
+    currencyCode?: StringNullableFilter | string | null
+    exchangeRate?: DecimalNullableFilter | Decimal | number | string | null
+    currencyId?: IntNullableFilter | number | null
     budgetId?: IntFilter | number
     categoryId?: IntFilter | number
     subcategoryId?: IntNullableFilter | number | null
@@ -14143,8 +14259,10 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     payer: PayerCreateNestedOneWithoutTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutTransactionsInput
+    currency?: CurrencyCreateNestedOneWithoutTransactionsInput
     payFrom: BudgetCreateNestedOneWithoutTransactionsInput
     category: CategoryCreateNestedOneWithoutTransactionsInput
     subcategory?: SubcategoryCreateNestedOneWithoutTransactionsInput
@@ -14158,7 +14276,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -14183,7 +14303,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payer: PayerCreateNestedOneWithoutRecurringTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutRecurringTransactionInput
+    currency?: CurrencyCreateNestedOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsCreateNestedManyWithoutTransactionInput
     category: CategoryCreateNestedOneWithoutRecurringTransactionInput
     subcategory?: SubcategoryCreateNestedOneWithoutRecurringTransactionInput
@@ -14199,7 +14319,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -14296,7 +14416,7 @@ export namespace Prisma {
     activationDate?: DateTimeFilter | Date | string
     isDeleted?: BoolFilter | boolean
     payerId?: IntFilter | number
-    currencyId?: IntFilter | number
+    currencyId?: IntNullableFilter | number | null
     categoryId?: IntFilter | number
     subcategoryId?: IntNullableFilter | number | null
     outcomeCategoryId?: IntNullableFilter | number | null
@@ -14344,8 +14464,10 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     payer: PayerCreateNestedOneWithoutTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutTransactionsInput
+    currency?: CurrencyCreateNestedOneWithoutTransactionsInput
     payFrom: BudgetCreateNestedOneWithoutTransactionsInput
     category: CategoryCreateNestedOneWithoutTransactionsInput
     subcategory?: SubcategoryCreateNestedOneWithoutTransactionsInput
@@ -14359,7 +14481,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -14384,7 +14508,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payer: PayerCreateNestedOneWithoutRecurringTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutRecurringTransactionInput
+    currency?: CurrencyCreateNestedOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsCreateNestedManyWithoutTransactionInput
     category: CategoryCreateNestedOneWithoutRecurringTransactionInput
     subcategory?: SubcategoryCreateNestedOneWithoutRecurringTransactionInput
@@ -14400,7 +14524,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     incomeCategoryId?: number | null
@@ -14526,8 +14650,10 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     payer: PayerCreateNestedOneWithoutTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutTransactionsInput
+    currency?: CurrencyCreateNestedOneWithoutTransactionsInput
     payFrom: BudgetCreateNestedOneWithoutTransactionsInput
     subcategory?: SubcategoryCreateNestedOneWithoutTransactionsInput
     outcomeCategory?: OutcomeCategoryCreateNestedOneWithoutTransactionsInput
@@ -14541,7 +14667,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -14566,7 +14694,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payer: PayerCreateNestedOneWithoutRecurringTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutRecurringTransactionInput
+    currency?: CurrencyCreateNestedOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsCreateNestedManyWithoutTransactionInput
     subcategory?: SubcategoryCreateNestedOneWithoutRecurringTransactionInput
     outcomeCategory?: OutcomeCategoryCreateNestedOneWithoutRecurringTransactionInput
@@ -14582,7 +14710,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
     incomeCategoryId?: number | null
@@ -14750,8 +14878,10 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     payer: PayerCreateNestedOneWithoutTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutTransactionsInput
+    currency?: CurrencyCreateNestedOneWithoutTransactionsInput
     payFrom: BudgetCreateNestedOneWithoutTransactionsInput
     category: CategoryCreateNestedOneWithoutTransactionsInput
     outcomeCategory?: OutcomeCategoryCreateNestedOneWithoutTransactionsInput
@@ -14765,7 +14895,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     outcomeCategoryId?: number | null
@@ -14790,7 +14922,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payer: PayerCreateNestedOneWithoutRecurringTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutRecurringTransactionInput
+    currency?: CurrencyCreateNestedOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsCreateNestedManyWithoutTransactionInput
     category: CategoryCreateNestedOneWithoutRecurringTransactionInput
     outcomeCategory?: OutcomeCategoryCreateNestedOneWithoutRecurringTransactionInput
@@ -14806,7 +14938,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     outcomeCategoryId?: number | null
     incomeCategoryId?: number | null
@@ -14920,6 +15052,8 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     payer: PayerCreateNestedOneWithoutTransactionsInput
     payFrom: BudgetCreateNestedOneWithoutTransactionsInput
     category: CategoryCreateNestedOneWithoutTransactionsInput
@@ -14935,6 +15069,8 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -15717,7 +15853,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payer: PayerCreateNestedOneWithoutRecurringTransactionsInput
-    currency: CurrencyCreateNestedOneWithoutRecurringTransactionInput
+    currency?: CurrencyCreateNestedOneWithoutRecurringTransactionInput
     category: CategoryCreateNestedOneWithoutRecurringTransactionInput
     subcategory?: SubcategoryCreateNestedOneWithoutRecurringTransactionInput
     outcomeCategory?: OutcomeCategoryCreateNestedOneWithoutRecurringTransactionInput
@@ -15733,7 +15869,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -15786,7 +15922,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payer?: PayerUpdateOneRequiredWithoutRecurringTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutRecurringTransactionInput
+    currency?: CurrencyUpdateOneWithoutRecurringTransactionInput
     category?: CategoryUpdateOneRequiredWithoutRecurringTransactionInput
     subcategory?: SubcategoryUpdateOneWithoutRecurringTransactionInput
     outcomeCategory?: OutcomeCategoryUpdateOneWithoutRecurringTransactionInput
@@ -15802,7 +15938,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -15850,7 +15986,9 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
-    currency: CurrencyCreateNestedOneWithoutTransactionsInput
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currency?: CurrencyCreateNestedOneWithoutTransactionsInput
     payFrom: BudgetCreateNestedOneWithoutTransactionsInput
     category: CategoryCreateNestedOneWithoutTransactionsInput
     subcategory?: SubcategoryCreateNestedOneWithoutTransactionsInput
@@ -15864,7 +16002,9 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -15889,7 +16029,7 @@ export namespace Prisma {
     dayOfPayment: Date | string
     activationDate: Date | string
     isDeleted?: boolean
-    currency: CurrencyCreateNestedOneWithoutRecurringTransactionInput
+    currency?: CurrencyCreateNestedOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsCreateNestedManyWithoutTransactionInput
     category: CategoryCreateNestedOneWithoutRecurringTransactionInput
     subcategory?: SubcategoryCreateNestedOneWithoutRecurringTransactionInput
@@ -15905,7 +16045,7 @@ export namespace Prisma {
     dayOfPayment: Date | string
     activationDate: Date | string
     isDeleted?: boolean
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -16330,7 +16470,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -16347,8 +16489,10 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
     payer?: PayerUpdateOneRequiredWithoutTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutTransactionsInput
+    currency?: CurrencyUpdateOneWithoutTransactionsInput
     category?: CategoryUpdateOneRequiredWithoutTransactionsInput
     subcategory?: SubcategoryUpdateOneWithoutTransactionsInput
     outcomeCategory?: OutcomeCategoryUpdateOneWithoutTransactionsInput
@@ -16362,7 +16506,9 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16376,7 +16522,9 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16405,7 +16553,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -16421,7 +16571,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -16432,8 +16582,10 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
     payer?: PayerUpdateOneRequiredWithoutTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutTransactionsInput
+    currency?: CurrencyUpdateOneWithoutTransactionsInput
     payFrom?: BudgetUpdateOneRequiredWithoutTransactionsInput
     category?: CategoryUpdateOneRequiredWithoutTransactionsInput
     subcategory?: SubcategoryUpdateOneWithoutTransactionsInput
@@ -16447,7 +16599,9 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     budgetId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16462,7 +16616,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payer?: PayerUpdateOneRequiredWithoutRecurringTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutRecurringTransactionInput
+    currency?: CurrencyUpdateOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsUpdateManyWithoutTransactionInput
     category?: CategoryUpdateOneRequiredWithoutRecurringTransactionInput
     subcategory?: SubcategoryUpdateOneWithoutRecurringTransactionInput
@@ -16478,7 +16632,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16494,7 +16648,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16507,7 +16661,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -16523,7 +16679,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     incomeCategoryId?: number | null
@@ -16534,8 +16690,10 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
     payer?: PayerUpdateOneRequiredWithoutTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutTransactionsInput
+    currency?: CurrencyUpdateOneWithoutTransactionsInput
     payFrom?: BudgetUpdateOneRequiredWithoutTransactionsInput
     category?: CategoryUpdateOneRequiredWithoutTransactionsInput
     subcategory?: SubcategoryUpdateOneWithoutTransactionsInput
@@ -16549,7 +16707,9 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     budgetId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16564,7 +16724,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payer?: PayerUpdateOneRequiredWithoutRecurringTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutRecurringTransactionInput
+    currency?: CurrencyUpdateOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsUpdateManyWithoutTransactionInput
     category?: CategoryUpdateOneRequiredWithoutRecurringTransactionInput
     subcategory?: SubcategoryUpdateOneWithoutRecurringTransactionInput
@@ -16580,7 +16740,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     incomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16594,7 +16754,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -16610,7 +16772,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
     incomeCategoryId?: number | null
@@ -16628,8 +16790,10 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
     payer?: PayerUpdateOneRequiredWithoutTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutTransactionsInput
+    currency?: CurrencyUpdateOneWithoutTransactionsInput
     payFrom?: BudgetUpdateOneRequiredWithoutTransactionsInput
     subcategory?: SubcategoryUpdateOneWithoutTransactionsInput
     outcomeCategory?: OutcomeCategoryUpdateOneWithoutTransactionsInput
@@ -16643,7 +16807,9 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     budgetId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16658,7 +16824,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payer?: PayerUpdateOneRequiredWithoutRecurringTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutRecurringTransactionInput
+    currency?: CurrencyUpdateOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsUpdateManyWithoutTransactionInput
     subcategory?: SubcategoryUpdateOneWithoutRecurringTransactionInput
     outcomeCategory?: OutcomeCategoryUpdateOneWithoutRecurringTransactionInput
@@ -16674,7 +16840,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     incomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16712,7 +16878,9 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     outcomeCategoryId?: number | null
@@ -16728,7 +16896,7 @@ export namespace Prisma {
     activationDate: Date | string
     isDeleted?: boolean
     payerId: number
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     outcomeCategoryId?: number | null
     incomeCategoryId?: number | null
@@ -16739,8 +16907,10 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
     payer?: PayerUpdateOneRequiredWithoutTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutTransactionsInput
+    currency?: CurrencyUpdateOneWithoutTransactionsInput
     payFrom?: BudgetUpdateOneRequiredWithoutTransactionsInput
     category?: CategoryUpdateOneRequiredWithoutTransactionsInput
     outcomeCategory?: OutcomeCategoryUpdateOneWithoutTransactionsInput
@@ -16754,7 +16924,9 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     budgetId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16769,7 +16941,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payer?: PayerUpdateOneRequiredWithoutRecurringTransactionsInput
-    currency?: CurrencyUpdateOneRequiredWithoutRecurringTransactionInput
+    currency?: CurrencyUpdateOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsUpdateManyWithoutTransactionInput
     category?: CategoryUpdateOneRequiredWithoutRecurringTransactionInput
     outcomeCategory?: OutcomeCategoryUpdateOneWithoutRecurringTransactionInput
@@ -16785,7 +16957,7 @@ export namespace Prisma {
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     incomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16799,6 +16971,8 @@ export namespace Prisma {
     amount: Decimal | number | string
     isDeleted?: boolean
     payerId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -16826,6 +17000,8 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
     payer?: PayerUpdateOneRequiredWithoutTransactionsInput
     payFrom?: BudgetUpdateOneRequiredWithoutTransactionsInput
     category?: CategoryUpdateOneRequiredWithoutTransactionsInput
@@ -16841,6 +17017,8 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
     payerId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
     budgetId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16905,7 +17083,9 @@ export namespace Prisma {
     note: string
     amount: Decimal | number | string
     isDeleted?: boolean
-    currencyId: number
+    currencyCode?: string | null
+    exchangeRate?: Decimal | number | string | null
+    currencyId?: number | null
     budgetId: number
     categoryId: number
     subcategoryId?: number | null
@@ -16921,7 +17101,7 @@ export namespace Prisma {
     dayOfPayment: Date | string
     activationDate: Date | string
     isDeleted?: boolean
-    currencyId: number
+    currencyId?: number | null
     categoryId: number
     subcategoryId?: number | null
     outcomeCategoryId?: number | null
@@ -16933,7 +17113,9 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    currency?: CurrencyUpdateOneRequiredWithoutTransactionsInput
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currency?: CurrencyUpdateOneWithoutTransactionsInput
     payFrom?: BudgetUpdateOneRequiredWithoutTransactionsInput
     category?: CategoryUpdateOneRequiredWithoutTransactionsInput
     subcategory?: SubcategoryUpdateOneWithoutTransactionsInput
@@ -16947,7 +17129,9 @@ export namespace Prisma {
     note?: StringFieldUpdateOperationsInput | string
     amount?: DecimalFieldUpdateOperationsInput | Decimal | number | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyCode?: NullableStringFieldUpdateOperationsInput | string | null
+    exchangeRate?: NullableDecimalFieldUpdateOperationsInput | Decimal | number | string | null
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     budgetId?: IntFieldUpdateOperationsInput | number
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16962,7 +17146,7 @@ export namespace Prisma {
     dayOfPayment?: DateTimeFieldUpdateOperationsInput | Date | string
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    currency?: CurrencyUpdateOneRequiredWithoutRecurringTransactionInput
+    currency?: CurrencyUpdateOneWithoutRecurringTransactionInput
     budgets?: TransactionsOnBudgetsUpdateManyWithoutTransactionInput
     category?: CategoryUpdateOneRequiredWithoutRecurringTransactionInput
     subcategory?: SubcategoryUpdateOneWithoutRecurringTransactionInput
@@ -16978,7 +17162,7 @@ export namespace Prisma {
     dayOfPayment?: DateTimeFieldUpdateOperationsInput | Date | string
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null
@@ -16994,7 +17178,7 @@ export namespace Prisma {
     dayOfPayment?: DateTimeFieldUpdateOperationsInput | Date | string
     activationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     isDeleted?: BoolFieldUpdateOperationsInput | boolean
-    currencyId?: IntFieldUpdateOperationsInput | number
+    currencyId?: NullableIntFieldUpdateOperationsInput | number | null
     categoryId?: IntFieldUpdateOperationsInput | number
     subcategoryId?: NullableIntFieldUpdateOperationsInput | number | null
     outcomeCategoryId?: NullableIntFieldUpdateOperationsInput | number | null

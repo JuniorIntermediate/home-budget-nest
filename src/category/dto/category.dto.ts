@@ -1,7 +1,6 @@
 import { ApiExtraModels, ApiProperty } from '@nestjs/swagger';
-import { Category } from '@prisma/client';
-import { SubcategoryDto } from './subcategory.dto';
-import { BaseCategoryDto } from './base-category.dto';
+import { BaseCategoryDto, SubcategoryDto } from '@category/dto';
+import { Category } from 'src/generated-prisma';
 
 @ApiExtraModels(BaseCategoryDto)
 export class CategoryDto extends BaseCategoryDto {
