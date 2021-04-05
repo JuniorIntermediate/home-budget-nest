@@ -40,3 +40,9 @@ export enum OrderByFieldEnum {
   PAYER = 'payerId',
   NOTE = 'note'
 }
+
+export enum GroupByEnum {
+  YEAR = 'year',
+  MONTH = 'month',
+  WEEK = 'week'
+}

@@ -8,6 +8,7 @@ import {
 import { DateTime } from 'luxon';
 import { GroupTransactionDto } from '@transaction/dto/transaction.dto';
 import { Transaction } from 'src/generated-prisma';
+import { GroupByEnum } from '@transaction/enums/filter.enum';
 
 @Injectable()
 export class TransactionRepository {
@@ -18,12 +19,12 @@ export class TransactionRepository {
     return this.prisma.transaction.create({ data });
   }
 
-  async aggregateTransactionsByMonth(from?: DateTime, to?: DateTime) {
+  async aggregateTransactionsBy(groupBy: GroupByEnum, from?: DateTime, to?: DateTime) {
     if (from) {
-      return this.aggregateTransactionsByMonthRestrictByDate(from, to);
+      return this.aggregateTransactionsByRestrictByDate(groupBy, from, to);
     }
     return this.prisma.$queryRaw<GroupTransactionDto[]>(`
-        SELECT date_part('month', date_trunc('month', t.date)) as month,
+        SELECT date_part('${groupBy}', date_trunc('${groupBy}', t.date)) as group_by_value,
                array_agg(t.id) as transaction_ids,
                t."budgetId",
                t."payerId",
@@ -32,14 +33,14 @@ export class TransactionRepository {
                t."outcomeCategoryId",
                t."subcategoryId"
         FROM db.budget_db."Transaction" t
-        GROUP BY month,
+        GROUP BY group_by_value,
                  t."budgetId",
                  t."payerId",
                  t."categoryId",
                  t."incomeCategoryId",
                  t."outcomeCategoryId",
                  t."subcategoryId"
-        ORDER BY month;
+        ORDER BY group_by_value;
     `);
   }
 
@@ -58,10 +59,10 @@ export class TransactionRepository {
     return { count, transactions };
   }
 
-  private aggregateTransactionsByMonthRestrictByDate(from: DateTime, to: DateTime) {
+  private aggregateTransactionsByRestrictByDate(groupBy, from: DateTime, to: DateTime) {
     if (!to) {
       return this.prisma.$queryRaw<GroupTransactionDto[]>`SELECT 
-        date_part('month', date_trunc('month', t.date)) as month,
+        date_part('${groupBy}', date_trunc('${groupBy}', t.date)) as group_by_value,
         array_agg(t.id) as transaction_ids,
         t."budgetId",
         t."payerId",
@@ -72,18 +73,18 @@ export class TransactionRepository {
         FROM db.budget_db."Transaction" t
         WHERE date = date(${from.toJSDate()})
         GROUP BY
-            month,
+            group_by_value,
             t."budgetId",
             t."payerId",
             t."categoryId",
             t."incomeCategoryId",
             t."outcomeCategoryId",
             t."subcategoryId"
-        ORDER BY month;`
+        ORDER BY group_by_value;`
         ;
     } else {
       return this.prisma.$queryRaw<GroupTransactionDto[]>`SELECT 
-        date_part('month', date_trunc('month', t.date)) as month,
+        date_part('${groupBy}', date_trunc('${groupBy}', t.date)) as group_by_value,
         array_agg(t.id) as transaction_ids,
         t."budgetId",
         t."payerId",
@@ -94,14 +95,14 @@ export class TransactionRepository {
         FROM db.budget_db."Transaction" t
         WHERE date between date(${from.toJSDate()}) and date(${to.toJSDate()})
         GROUP BY
-            month,
+            group_by_value,
             t."budgetId",
             t."payerId",
             t."categoryId",
             t."incomeCategoryId",
             t."outcomeCategoryId",
             t."subcategoryId"
-        ORDER BY month;`
+        ORDER BY group_by_value;`
         ;
     }
   }

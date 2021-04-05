@@ -70,7 +70,7 @@ export class TransactionController {
     required: false,
     type: GroupTransactionQueryDto,
   })
-  @Get('group-month')
+  @Get('group-by')
   async getTransactionsGroupedByMonth(
     @Query(new ValidationPipe({ transform: true })) query: GroupTransactionQueryDto,
   ): Promise<GroupTransactionDto[]> {

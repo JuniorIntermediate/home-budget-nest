@@ -4,7 +4,8 @@ import { DateTime } from 'luxon';
 import { Transaction } from 'src/generated-prisma';
 import { IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator';
 import { CurrencyDto } from '@currency/dto/currency.dto';
-import { IsValidDateTime } from '@core/models/custom.validator';
+import { IsValidDateTime, IsValidEnum } from '@core/models/custom.validator';
+import { GroupByEnum } from '@transaction/enums/filter.enum';
 
 export class TransactionDto {
   @ApiProperty()
@@ -92,8 +93,8 @@ export class GroupTransactionDto extends PickType(TransactionDto,
   ['budgetId', 'categoryId', 'incomeCategoryId', 'outcomeCategoryId', 'payerId', 'subcategoryId']) {
   @ApiProperty({ description: 'Transaction ids included in group', type: [Number] })
   transaction_ids: number[];
-  @ApiProperty({ description: 'Month as number' })
-  month: number;
+  @ApiProperty({ description: 'Grouped by value' })
+  group_by_value: number;
 }
 
 export class TransactionPaginationDto {
@@ -105,6 +106,15 @@ export class TransactionPaginationDto {
 }
 
 export class GroupTransactionQueryDto {
+  @ApiProperty({
+    required: true,
+    enum: GroupByEnum,
+    example: GroupByEnum.MONTH,
+    description: 'Aggregate transaction by specified group',
+  })
+  @IsValidEnum(GroupByEnum)
+  group: GroupByEnum;
+
   @ApiProperty({ type: 'string', format: 'ISO date-time', example: '2021-04-01T00:00:00.000Z', required: false })
   @Type(() => DateTime)
   @Transform(({ value }: ({ value: string })) => (value ? DateTime.fromISO(value) : null), {

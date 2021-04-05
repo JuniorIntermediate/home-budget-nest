@@ -114,7 +114,7 @@ export class TransactionService {
   }
 
   async getTransactionsGroupedByMonth(query: GroupTransactionQueryDto): Promise<GroupTransactionDto[]> {
-    return this.transactionRepository.aggregateTransactionsByMonth(query?.dateFrom, query?.dateTo);
+    return this.transactionRepository.aggregateTransactionsBy(query.group, query?.dateFrom, query?.dateTo);
   }
 
   async getTransactions(query?: QueryParamsDto): Promise<TransactionPaginationDto> {
