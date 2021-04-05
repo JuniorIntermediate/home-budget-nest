@@ -21,7 +21,8 @@ export enum FieldEnum {
   OUTCOME_CATEGORY = 'outcomeCategoryId',
   INCOME_CATEGORY = 'incomeCategoryId',
   PAYER = 'payerId',
-  NOTE = 'note'
+  NOTE = 'note',
+  ID = 'id'
 }
 
 export enum OrderDirectionEnum {

@@ -3,6 +3,7 @@ import { ExternalCurrencyInterface } from '@currency/interfaces/external-currenc
 import { Currency } from 'src/generated-prisma';
 import { IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { DEFAULT_CURRENCY } from '@core/models/constants';
 
 export class CurrencyDto {
   @ApiProperty({ description: 'Custom currency identifier', required: false })
@@ -16,7 +17,7 @@ export class CurrencyDto {
     required: false,
     default: 'PLN',
   })
-  @Transform(({ value }: { value: string }) => value || 'PLN')
+  @Transform(({ value }: { value: string }) => value || DEFAULT_CURRENCY.currency)
   @IsString()
   @MaxLength(3)
   code: string;
@@ -27,7 +28,7 @@ export class CurrencyDto {
     required: false,
     default: 1.0,
   })
-  @Transform(({ value }: { value: number }) => value || 1)
+  @Transform(({ value }: { value: number }) => value || DEFAULT_CURRENCY.exchangeRate)
   @IsOptional()
   @IsNumber()
   exchangeRate: number;
@@ -43,8 +44,8 @@ export class CurrencyDto {
         this.exchangeRate = input?.mid;
       }
     } else {
-      this.code = 'PLN';
-      this.exchangeRate = 1;
+      this.code = DEFAULT_CURRENCY.currency;
+      this.exchangeRate = DEFAULT_CURRENCY.exchangeRate;
     }
   }
 }

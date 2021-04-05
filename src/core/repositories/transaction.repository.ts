@@ -3,6 +3,7 @@ import { PrismaService } from '@core/prisma.service';
 import {
   GetTransactionWithCurrency,
   TransactionCreateParams,
+  TransactionGetByUniqueField,
   TransactionGetParams,
 } from '@core/schema-types/transaction.params';
 import { DateTime } from 'luxon';
@@ -44,9 +45,8 @@ export class TransactionRepository {
     `);
   }
 
-  async getTransactions(params: TransactionGetParams = {}): Promise<{ transactions: GetTransactionWithCurrency[], count: number }> {
-    const count = await this.prisma.transaction.count();
-    const transactions = await this.prisma.transaction.findMany({
+  async getTransactions(params: TransactionGetParams = {}): Promise<GetTransactionWithCurrency[]> {
+    return await this.prisma.transaction.findMany({
       ...params,
       where: {
         ...params.where,
@@ -56,7 +56,6 @@ export class TransactionRepository {
         currency: true,
       },
     });
-    return { count, transactions };
   }
 
   private aggregateTransactionsByRestrictByDate(groupBy, from: DateTime, to: DateTime) {
@@ -105,5 +104,9 @@ export class TransactionRepository {
         ORDER BY group_by_value;`
         ;
     }
+  }
+
+  async getTransactionByUniqueField(where: TransactionGetByUniqueField): Promise<GetTransactionWithCurrency> {
+    return this.prisma.transaction.findUnique({ where });
   }
 }

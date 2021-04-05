@@ -5,6 +5,8 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  ParseIntPipe,
   Post,
   Query,
   Req,
@@ -75,5 +77,15 @@ export class TransactionController {
     @Query(new ValidationPipe({ transform: true })) query: GroupTransactionQueryDto,
   ): Promise<GroupTransactionDto[]> {
     return this.transactionService.getTransactionsGroupedByMonth(query);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Get transaction' })
+  @ApiOkResponse({ description: 'Return transaction.', type: TransactionDto })
+  @Get(':id')
+  getTransaction(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<TransactionDto> {
+    return this.transactionService.getTransaction(id);
   }
 }

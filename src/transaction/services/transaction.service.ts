@@ -20,6 +20,7 @@ import { QueryParamsDto } from '@transaction/dto/query-params.dto';
 import { CurrencyDto } from '@currency/dto/currency.dto';
 import { FilterBuilder } from '@transaction/services/filter.builder';
 import { Currency } from 'src/generated-prisma';
+import { DEFAULT_CURRENCY } from '@core/models/constants';
 
 @Injectable()
 export class TransactionService {
@@ -72,7 +73,7 @@ export class TransactionService {
           },
         },
       };
-    } else if (currency.code !== 'PLN') {
+    } else if (currency.code !== DEFAULT_CURRENCY.currency) {
       data = {
         ...data,
         exchangeRate: currency.exchangeRate,
@@ -121,14 +122,19 @@ export class TransactionService {
     return !query ? this.getAllTransactions() : this.getFilteredTransactions(query);
   }
 
+  async getTransaction(id: number): Promise<TransactionDto> {
+    const transaction = await this.transactionRepository.getTransactionByUniqueField({id});
+    return { ...this.mapper.mapToDto(transaction, TransactionDto), currency: this.applyCurrency(transaction) };
+  }
+
   private getAllTransactions = async (): Promise<TransactionPaginationDto> => {
-    const { count: total, transactions } = await this.transactionRepository.getTransactions();
+    const transactions  = await this.transactionRepository.getTransactions();
     const items = transactions.map(transaction => {
       return { ...this.mapper.mapToDto(transaction, TransactionDto), currency: this.applyCurrency(transaction) };
     });
     return {
       items,
-      total,
+      total: items.length,
     };
   };
 
@@ -138,13 +144,13 @@ export class TransactionService {
       .withFilters(query)
       .withOrder(query)
       .build();
-    const { count: total, transactions } = await this.transactionRepository.getTransactions(queryBuilder);
+    const transactions  = await this.transactionRepository.getTransactions(queryBuilder);
     const items = transactions.map(transaction => {
       return { ...this.mapper.mapToDto(transaction, TransactionDto), currency: this.applyCurrency(transaction) };
     });
     return {
       items,
-      total,
+      total: items.length,
     };
   };
 
