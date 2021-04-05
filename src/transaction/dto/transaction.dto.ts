@@ -93,7 +93,7 @@ export class GroupTransactionDto extends PickType(TransactionDto,
   ['budgetId', 'categoryId', 'incomeCategoryId', 'outcomeCategoryId', 'payerId', 'subcategoryId']) {
   @ApiProperty({ description: 'Transaction ids included in group', type: [Number] })
   transaction_ids: number[];
-  @ApiProperty({ description: 'Grouped by value' })
+  @ApiProperty({ description: 'Group by value' })
   group_by_value: number;
 }
 
