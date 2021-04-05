@@ -2,7 +2,7 @@ import { ApiHideProperty, ApiProperty, OmitType, PickType } from '@nestjs/swagge
 import { Expose, Transform, Type } from 'class-transformer';
 import { DateTime } from 'luxon';
 import { Transaction } from 'src/generated-prisma';
-import { IsDefined, IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator';
+import { IsNumber, IsOptional, IsString, MaxLength, ValidateNested } from 'class-validator';
 import { CurrencyDto } from '@currency/dto/currency.dto';
 import { IsValidDateTime } from '@core/models/custom.validator';
 
@@ -89,7 +89,9 @@ export class CreateTransactionDto extends OmitType(TransactionDto, ['id'] as con
 }
 
 export class GroupTransactionDto extends PickType(TransactionDto,
-  ['budgetId', 'amount', 'categoryId', 'incomeCategoryId', 'outcomeCategoryId', 'payerId', 'subcategoryId']) {
+  ['budgetId', 'categoryId', 'incomeCategoryId', 'outcomeCategoryId', 'payerId', 'subcategoryId']) {
+  @ApiProperty({ description: 'Transaction ids included in group', type: [Number] })
+  transaction_ids: number[];
   @ApiProperty({ description: 'Month as number' })
   month: number;
 }

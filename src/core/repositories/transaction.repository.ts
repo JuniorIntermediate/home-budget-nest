@@ -24,13 +24,13 @@ export class TransactionRepository {
     }
     return this.prisma.$queryRaw<GroupTransactionDto[]>(`
         SELECT date_part('month', date_trunc('month', t.date)) as month,
+               array_agg(t.id) as transaction_ids,
                t."budgetId",
                t."payerId",
                t."categoryId",
                t."incomeCategoryId",
                t."outcomeCategoryId",
-               t."subcategoryId",
-               sum(amount)                                     as amount
+               t."subcategoryId"
         FROM db.budget_db."Transaction" t
         GROUP BY month,
                  t."budgetId",
@@ -62,13 +62,13 @@ export class TransactionRepository {
     if (!to) {
       return this.prisma.$queryRaw<GroupTransactionDto[]>`SELECT 
         date_part('month', date_trunc('month', t.date)) as month,
+        array_agg(t.id) as transaction_ids,
         t."budgetId",
         t."payerId",
         t."categoryId",
         t."incomeCategoryId",
         t."outcomeCategoryId",
-        t."subcategoryId",
-        sum(amount) as amount
+        t."subcategoryId"
         FROM db.budget_db."Transaction" t
         WHERE date = date(${from.toJSDate()})
         GROUP BY
@@ -84,13 +84,13 @@ export class TransactionRepository {
     } else {
       return this.prisma.$queryRaw<GroupTransactionDto[]>`SELECT 
         date_part('month', date_trunc('month', t.date)) as month,
+        array_agg(t.id) as transaction_ids,
         t."budgetId",
         t."payerId",
         t."categoryId",
         t."incomeCategoryId",
         t."outcomeCategoryId",
-        t."subcategoryId",
-        sum(amount) as amount
+        t."subcategoryId"
         FROM db.budget_db."Transaction" t
         WHERE date between date(${from.toJSDate()}) and date(${to.toJSDate()})
         GROUP BY
