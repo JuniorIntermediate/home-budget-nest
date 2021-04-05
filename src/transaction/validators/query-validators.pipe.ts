@@ -54,6 +54,7 @@ export class QueryValidatorPipe implements PipeTransform {
       case FieldEnum.SUBCATEGORY:
       case FieldEnum.OUTCOME_CATEGORY:
       case FieldEnum.INCOME_CATEGORY:
+      case FieldEnum.ID:
       case FieldEnum.PAYER:
         errors.push(...this.validateFilterValue(filter, 'number'));
         break;

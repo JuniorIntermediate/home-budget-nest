@@ -27,3 +27,7 @@ export const SENDGRID_EMAIL_FROM = process.env.SENDGRID_FROM;
 export const MAIL_PROVIDER = process.env.MAIL_PROVIDER;
 export const IS_SMTP_PROVIDER = MAIL_PROVIDER === EmailProviderEnum.SMTP;
 export const CURRENCY_EXTERNAL_API = process.env.CURRENCY_EXTERNAL_API;
+export const DEFAULT_CURRENCY = {
+  currency: process.env.DEFAULT_CURRENCY,
+  exchangeRate: Number(process.env.DEFAULT_EXCHANGE_RATE),
+};

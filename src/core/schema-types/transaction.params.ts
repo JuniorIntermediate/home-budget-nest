@@ -7,6 +7,7 @@ export type TransactionGetParams = {
   where?: Prisma.TransactionWhereInput,
   orderBy?: Prisma.TransactionOrderByInput
 }
+export type TransactionGetByUniqueField = Prisma.TransactionWhereUniqueInput;
 export type GetTransactionWithCurrency = Transaction & { currency?: Currency };
 type Filter<T> = {
   equals?: T

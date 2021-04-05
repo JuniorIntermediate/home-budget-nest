@@ -21,7 +21,8 @@ export enum FieldEnum {
   OUTCOME_CATEGORY = 'outcomeCategoryId',
   INCOME_CATEGORY = 'incomeCategoryId',
   PAYER = 'payerId',
-  NOTE = 'note'
+  NOTE = 'note',
+  ID = 'id'
 }
 
 export enum OrderDirectionEnum {
@@ -39,4 +40,10 @@ export enum OrderByFieldEnum {
   INCOME_CATEGORY = 'incomeCategoryId',
   PAYER = 'payerId',
   NOTE = 'note'
+}
+
+export enum GroupByEnum {
+  YEAR = 'year',
+  MONTH = 'month',
+  WEEK = 'week'
 }
